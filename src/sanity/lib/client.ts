@@ -6,7 +6,7 @@ const config = {
   apiVersion: "2024-01-01",
 };
 
-export const client = createClient({ ...config, useCdn: true });
+export const client = createClient({ ...config, useCdn: false });
 
 export const previewClient = createClient({
   ...config,

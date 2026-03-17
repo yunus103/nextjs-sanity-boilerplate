@@ -94,6 +94,7 @@ const tagMap = {
 | Cache Tag | Kapsayan Şema | Etkilenen Sayfalar |
 |-----------|---------------|--------------------|
 | `layout` | `siteSettings`, `navigation` | Tüm sayfalar (header/footer) |
+| `faq` | `faq` | FAQ kullanılan sayfalar |
 | `home` | `homePage` | `/` |
 | `about` | `aboutPage` | `/hakkimizda` |
 | `contact` | `contactPage` | `/iletisim` |
@@ -157,7 +158,42 @@ import { SanityImage } from "@/components/ui/SanityImage";
 </div>
 ```
 
+### `Breadcrumbs`
+
+```tsx
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+
+// Otomatik path-based
+<Breadcrumbs />
+
+// Özel liste ile
+<Breadcrumbs items={[{ label: "Hizmetler", href: "/hizmetler" }, { label: "Web Tasarım", href: "/hizmetler/web-tasarim", active: true }]} />
+```
+
+### `Skeleton`
+
+```tsx
+import { Skeleton } from "@/components/ui/skeleton";
+
+<div className="flex items-center space-x-4">
+  <Skeleton className="h-12 w-12 rounded-full" />
+  <div className="space-y-2">
+    <Skeleton className="h-4 w-[250px]" />
+    <Skeleton className="h-4 w-[200px]" />
+  </div>
+</div>
+```
+
+### `FAQ`
+
+```tsx
+import { FAQ } from "@/components/ui/FAQ";
+
+<FAQ items={faqData} />
+```
+
 ### `RichText`
+... (existing content)
 
 ```tsx
 import { RichText } from "@/components/ui/RichText";

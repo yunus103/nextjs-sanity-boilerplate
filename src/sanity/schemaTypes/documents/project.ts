@@ -37,8 +37,16 @@ export const projectType = defineType({
               name: "size",
               title: "Boyut",
               type: "string",
-              options: { list: [{ title: "Küçük (%50)", value: "half" }, { title: "Normal (%75)", value: "large" }, { title: "Tam Genişlik", value: "full" }] },
-              initialValue: "full",
+              options: { 
+                list: [
+                  { title: "Çok Küçük (%25)", value: "25" },
+                  { title: "Küçük (%33)", value: "33" },
+                  { title: "Orta (%50)", value: "50" },
+                  { title: "Geniş (%75)", value: "75" },
+                  { title: "Tam Genişlik (%100)", value: "100" }
+                ] 
+              },
+              initialValue: "100",
             }),
           ],
         },

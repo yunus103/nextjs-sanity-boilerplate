@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
 
   return (
-    <article className="container mx-auto px-4 py-16 max-w-3xl">
+    <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
       <FadeIn direction="up">
         <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/projeler" />}>
           ← Projelere Dön

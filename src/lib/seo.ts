@@ -23,7 +23,26 @@ type BuildMetadataParams = {
 export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
   const defaults = await client.fetch(defaultSeoQuery, {}, { next: { tags: ["layout"] } });
 
-  const title = params.pageSeo?.metaTitle || params.title || defaults?.title || defaults?.siteName;
+  const siteName = defaults?.siteName || "Site Adı";
+  const defaultSlogan = defaults?.title || defaults?.siteName || ""; // Default SEO Meta Title alanı
+  const isHomePage = params.canonicalPath === "/";
+
+  let title = "";
+  if (isHomePage) {
+    // Ana Sayfa Önceliği: 
+    // 1. Ana Sayfa Dokümanı Sayfa SEO Başlığı
+    // 2. Fonksiyona gönderilen özel başlık (params.title)
+    // 3. Site Ayarları -> Varsayılan SEO -> Meta Başlık (Slogan)
+    const slogan = params.pageSeo?.metaTitle || params.title || defaultSlogan;
+    title = slogan && slogan !== siteName ? `${siteName} | ${slogan}` : siteName;
+  } else {
+    // Diğer Sayfalar Önceliği: 
+    // 1. Sayfanın kendi SEO Başlığı
+    // 2. Fonksiyona gönderilen başlık (Hakkımızda vs.)
+    const pageTitle = params.pageSeo?.metaTitle || params.title || "";
+    title = pageTitle ? `${pageTitle} | ${siteName}` : siteName;
+  }
+
   const description = params.pageSeo?.metaDescription || params.description || defaults?.description;
   const ogImageSource = params.pageSeo?.ogImage || params.ogImage || defaults?.ogImage;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;

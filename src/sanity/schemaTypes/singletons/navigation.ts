@@ -23,6 +23,34 @@ const navItemFields = [
     hidden: ({ parent }: any) => parent?.linkType !== "external",
   }),
   defineField({ name: "openInNewTab", title: "Yeni Sekmede Aç", type: "boolean", initialValue: false }),
+  defineField({
+    name: "subLinks",
+    title: "Alt Linkler",
+    type: "array",
+    of: [{ type: "object", fields: [
+      defineField({ name: "label", title: "Etiket", type: "string", validation: (Rule) => Rule.required() }),
+      defineField({
+        name: "linkType",
+        title: "Link Türü",
+        type: "string",
+        options: { list: [{ title: "İç Link (Sayfa)", value: "internal" }, { title: "Dış Link", value: "external" }] },
+        initialValue: "internal",
+      }),
+      defineField({
+        name: "internalSlug",
+        title: "İç Sayfa Slug'ı",
+        type: "string",
+        hidden: ({ parent }: any) => parent?.linkType !== "internal",
+      }),
+      defineField({
+        name: "externalUrl",
+        title: "Dış Link URL",
+        type: "url",
+        hidden: ({ parent }: any) => parent?.linkType !== "external",
+      }),
+      defineField({ name: "openInNewTab", title: "Yeni Sekmede Aç", type: "boolean", initialValue: false }),
+    ] }],
+  }),
 ];
 
 export const navigationType = defineType({

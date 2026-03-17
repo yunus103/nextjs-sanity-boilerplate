@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
       service: ["services"],
       project: ["projects"],
       legalPage: ["legal"],
+      faq: ["faq"],
     };
 
     const tags = tagMap[_type] || ["all"];

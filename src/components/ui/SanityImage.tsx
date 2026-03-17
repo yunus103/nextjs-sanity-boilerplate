@@ -14,6 +14,7 @@ type SanityImageProps = {
   sizes?: string;
   className?: string;
   priority?: boolean;
+  fit?: "crop" | "fill" | "fillmax" | "max" | "scale" | "min";
 };
 
 export function SanityImage({
@@ -24,11 +25,23 @@ export function SanityImage({
   sizes = "(max-width: 768px) 100vw, 50vw",
   className,
   priority = false,
+  fit = "crop",
 }: SanityImageProps) {
   if (!image?.asset) return null;
 
-  const imageUrl = urlForImage(image)?.auto("format").fit("crop").url();
+  // 1. Sanity URL Builder hazırlığı
+  let builder = urlForImage(image)?.auto("format");
+
+  // Eğer fill değilse, CDN tarafında görseli tam istediğimiz boyuta çekiyoruz
+  if (!fill && builder) {
+    builder = builder.width(width).height(height).fit(fit);
+  }
+
+  const imageUrl = builder?.url();
   const blurDataURL = getImageLqip(image);
+
+  // 2. Hotspot (Odak Noktası) hesaplama
+  // Sanity hotspot değerleri 0-1 arasındadır, bu yüzden yüzdesiyle çarpıyoruz.
   const objectPosition = image.hotspot
     ? `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`
     : "center";
@@ -38,14 +51,17 @@ export function SanityImage({
   return (
     <Image
       src={imageUrl}
-      alt={image.alt}
+      alt={image.alt || ""}
       width={fill ? undefined : width}
       height={fill ? undefined : height}
       fill={fill}
       sizes={sizes}
       className={className}
       priority={priority}
-      style={{ objectPosition }}
+      style={{ 
+        objectPosition,
+        objectFit: fill ? "cover" : undefined 
+      }}
       placeholder={blurDataURL ? "blur" : "empty"}
       blurDataURL={blurDataURL}
     />
