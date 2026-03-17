@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js + Sanity Kurumsal Site Boilerplate
 
-## Getting Started
+Modern ajanslar için hazır, production-grade Next.js 15 + Sanity v3 boilerplate.
 
-First, run the development server:
+## Tech Stack
+
+| Teknoloji | Versiyon | Açıklama |
+|-----------|----------|----------|
+| Next.js | 15+ | App Router, TypeScript |
+| Tailwind CSS | v4 | `@plugin` tabanlı konfigürasyon |
+| shadcn/ui | v4 | `@base-ui/react` tabanlı |
+| Sanity | v3 | Headless CMS |
+| Framer Motion | latest | Animasyonlar |
+| react-icons | latest | SVG ikon kütüphanesi |
+| next-themes | latest | Dark/Light mod |
+| Nodemailer | latest | İletişim formu e-postası |
+| Zod + @t3-oss/env-nextjs | latest | Type-safe env validasyonu |
+
+---
+
+## Hızlı Başlangıç
 
 ```bash
+# 1. Repoyu klonla
+git clone https://github.com/kullanici/proje-adi.git
+cd proje-adi
+
+# 2. Bağımlılıkları yükle
+npm install
+
+# 3. .env.local içindeki placeholder değerleri gerçek değerlerle doldur
+# (Aşağıdaki "Zorunlu Kurulum Adımları" bölümüne bak)
+
+# 4. Geliştirme sunucusunu başlat
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tarayıcıda:
+- Site: `http://localhost:3000`
+- Sanity Studio: `http://localhost:3000/studio`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Zorunlu Kurulum Adımları
 
-## Learn More
+### 1. Sanity Projesi Oluştur
 
-To learn more about Next.js, take a look at the following resources:
+1. [sanity.io/manage](https://sanity.io/manage) adresine git
+2. "New Project" → proje adını gir
+3. Proje ID'yi kopyala → `.env.local` içinde `NEXT_PUBLIC_SANITY_PROJECT_ID` değerini güncelle
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Sanity API Token Al
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Sanity Dashboard → proje → **API** sekmesi
+2. **Tokens** → **Add API Token**
+3. İsim: `Read Token`, Yetki: **Editor**
+4. Token'ı kopyala → `.env.local` içinde `SANITY_API_READ_TOKEN` değerini güncelle
 
-## Deploy on Vercel
+### 3. Sanity Webhook Kur (ISR için)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Sanity Dashboard → proje → **API** → **Webhooks**
+2. **Add Webhook**:
+   - URL: `https://siteadi.com/api/revalidate`
+   - HTTP Method: `POST`
+   - Trigger on: **Create, Update, Delete**
+   - Header: `x-webhook-secret` = `.env.local`'daki `SANITY_WEBHOOK_SECRET` değeri
+3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini webhook'ta ayarladığın şifre ile güncelle
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Draft Mode Kurulumu
+
+`SANITY_PREVIEW_SECRET` değerini rastgele bir şifre ile güncelle:
+
+```bash
+# Güvenli bir şifre üretmek için (opsiyonel)
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Draft mode'u aktifleştirmek için: `/api/draft/enable?secret=SECRET&redirect=/`
+
+### 5. Gmail SMTP Kurulumu (İletişim Formu)
+
+1. Google Hesabı → **Güvenlik** → **2 Adımlı Doğrulama** → etkinleştir
+2. **Uygulama Şifreleri** → Uygulama: Mail → Şifreyi kopyala
+3. `.env.local` içinde `SMTP_USER` ve `SMTP_PASS` değerlerini güncelle
+
+---
+
+## Yeni Projede Yapılacaklar Checklist
+
+- [ ] `package.json` içinde `"name"` alanını güncelle
+- [ ] `.env.local` içindeki tüm `your-*` placeholder değerlerini gerçek değerlerle değiştir
+- [ ] `src/app/layout.tsx` içindeki `"Site Adı"` metnini güncelle
+- [ ] `tailwind.config.ts` → `globals.css` üzerinden marka renklerini güncelle
+- [ ] `public/` klasörüne `favicon.ico` koy
+- [ ] Sanity Studio'yu aç (`/studio`), **Site Ayarları** ve **Navigasyon** dokümanlarını doldur
+- [ ] Vercel'e deploy et, tüm `.env.local` env değişkenlerini Vercel paneline ekle
+- [ ] Sanity Dashboard → Webhooks: `https://siteadi.com/api/revalidate` ekle
+
+---
+
+## Proje Yapısı
+
+```
+src/
+├── app/
+│   ├── (site)/           # Kullanıcıya görünen tüm sayfalar
+│   │   ├── page.tsx      # Ana sayfa
+│   │   ├── blog/         # Blog listesi + detay
+│   │   ├── hizmetler/    # Hizmet detay sayfaları
+│   │   ├── projeler/     # Proje detay sayfaları
+│   │   ├── iletisim/     # İletişim sayfası
+│   │   └── yasal/        # Yasal sayfalar
+│   ├── api/              # API route'ları
+│   │   ├── revalidate/   # ISR webhook
+│   │   ├── draft/        # Draft mode enable/disable
+│   │   └── contact/      # İletişim formu
+│   ├── studio/           # Sanity Studio (embedded)
+│   ├── layout.tsx        # Root layout
+│   ├── not-found.tsx     # 404 sayfası
+│   ├── sitemap.ts        # Dinamik sitemap
+│   └── robots.ts         # robots.txt
+├── components/
+│   ├── forms/            # ContactForm
+│   ├── layout/           # Header, Footer, ThemeProvider, vb.
+│   ├── seo/              # JsonLd
+│   └── ui/               # SanityImage, RichText, FadeIn, AnimateGroup + shadcn
+├── lib/
+│   ├── env.ts            # Type-safe env validasyonu
+│   ├── seo.ts            # buildMetadata()
+│   └── utils.ts          # cn(), formatDate()
+└── sanity/
+    ├── lib/              # client.ts, image.ts, queries.ts
+    ├── plugins/          # singletonPlugin
+    ├── schemaTypes/      # Tüm Sanity şemaları
+    └── structure.ts      # Studio sol panel yapısı
+```
