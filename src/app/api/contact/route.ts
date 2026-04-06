@@ -54,7 +54,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("SMTP Mail Error:", error);
     return NextResponse.json({ error: "Mail gönderilemedi" }, { status: 500 });
   }
 }

@@ -40,7 +40,9 @@ Welcome, Agent. This document is your primary guide for understanding, maintaini
 
 ### Aesthetics
 - **Premium Look**: Avoid default browser styles. Use subtle gradients, high-quality typography (Inter/Roboto), and plenty of whitespace.
-- **Colors**: Always use the Tailwind theme variables defined in `globals.css` and `tailwind.config.ts`.
+- **Colors**: Manage branding colors (primary, background, etc.) directly in `src/app/globals.css` using CSS variables inside `:root` and `.dark` blocks.
+- **Logo**: Use a single `logo` field in `siteSettings`; dark mode visibility is handled via CSS filters (`grayscale invert opacity-90`) in `Header.tsx`.
+- **Favicon**: Dynamic from Sanity. Managed via `generateMetadata` in `RootLayout`.
 - **Micro-animations**: Use `framer-motion` for all transitions. 
   - Prefer the `FadeIn` component for section reveals.
   - Use `AnimateGroup` for staggered list animations.
@@ -67,8 +69,9 @@ Welcome, Agent. This document is your primary guide for understanding, maintaini
 
 ---
 
-## 5. SEO & Meta Management
-- **`buildMetadata` Helper**: Always use `buildMetadata` in `generateMetadata` functions.
+### SEO & Meta Management
+- **`buildMetadata` Helper**: Always use `buildMetadata`. It standardizes titles: Home is `Site | Slogan`, Inner is `Page | Site`.
+- **Dynamic Icons**: Favicon is served dynamically via Metadata API from Sanity settings.
 - **Schema.org**: Implement JSON-LD for Organization, Articles, and Services using the `JsonLd` component.
 - **Alt Tags**: Alt tags for images are MANDATORY in Sanity schemas.
 

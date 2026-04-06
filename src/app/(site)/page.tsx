@@ -11,10 +11,27 @@ import Link from "next/link";
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getClient().fetch(homePageQuery, {}, { next: { tags: ["home"] } });
   return buildMetadata({
-    title: data?.heroTitle,
     canonicalPath: "/",
     pageSeo: data?.seo,
   });
+}
+
+function resolveLink(linkData: any) {
+  if (!linkData) return "/";
+  if (linkData.linkType === "manual") return linkData.manual || "/";
+  
+  const ref = linkData.internal;
+  if (!ref || !ref._type) return "/";
+  
+  switch (ref._type) {
+    case "service": return `/hizmetler/${ref.slug}`;
+    case "project": return `/projeler/${ref.slug}`;
+    case "blogPost": return `/blog/${ref.slug}`;
+    case "legalPage": return `/yasal/${ref.slug}`;
+    case "aboutPage": return `/hakkimizda`;
+    case "contactPage": return `/iletisim`;
+    default: return "/";
+  }
 }
 
 export default async function HomePage() {
@@ -54,8 +71,8 @@ export default async function HomePage() {
                 {data.heroSubtitle}
               </p>
             )}
-            {data?.heroCtaLabel && data?.heroCtaSlug && (
-              <Button size="lg" render={<Link href={`/${data.heroCtaSlug}`} />}>
+            {data?.heroCtaLabel && data?.heroCtaLink && (
+              <Button size="lg" render={<Link href={resolveLink(data.heroCtaLink)} />}>
                 {data.heroCtaLabel}
               </Button>
             )}

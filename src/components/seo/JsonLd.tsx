@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/utils";
+
 export function JsonLd({ data }: { data: Record<string, any> }) {
   return (
     <script
@@ -12,7 +14,7 @@ export function organizationJsonLd(settings: any) {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: settings?.siteName,
-    url: process.env.NEXT_PUBLIC_SITE_URL,
+    url: getSiteUrl(),
     ...(settings?.contactInfo?.phone && { telephone: settings.contactInfo.phone }),
     ...(settings?.contactInfo?.email && { email: settings.contactInfo.email }),
     ...(settings?.contactInfo?.address && {
@@ -28,6 +30,6 @@ export function articleJsonLd(post: any) {
     "@type": "Article",
     headline: post?.title,
     datePublished: post?.publishedAt,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post?.slug?.current}`,
+    url: `${getSiteUrl()}/blog/${post?.slug?.current}`,
   };
 }

@@ -9,7 +9,7 @@ export const siteSettingsType = defineType({
     defineField({ name: "siteTagline", title: "Slogan", type: "string" }),
     defineField({
       name: "logo",
-      title: "Logo (Açık Tema)",
+      title: "Logo",
       type: "image",
       options: { hotspot: true },
       description: "Önerilen: 400x120px (Yatay) veya 200x200px (Kare). Şeffaf PNG veya SVG tercih edilmelidir.",
@@ -19,20 +19,6 @@ export const siteSettingsType = defineType({
           title: "Alternatif Metin",
           type: "string",
           description: "Görsel yüklenemediğinde görünecek olan yazı (Örn: Şirket Logo)",
-        }),
-      ],
-    }),
-    defineField({
-      name: "logoDark",
-      title: "Logo (Koyu Tema)",
-      type: "image",
-      options: { hotspot: true },
-      description: "Karanlık modda gösterilecek logo. Önerilen: 400x120px (Yatay). Boş bırakılırsa standart logo kullanılır.",
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alternatif Metin",
-          type: "string",
         }),
       ],
     }),

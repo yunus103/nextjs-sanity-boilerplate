@@ -13,9 +13,7 @@ import { RiMailLine, RiPhoneLine, RiMapPinLine } from "react-icons/ri";
 
 type NavItem = {
   label: string;
-  linkType: "internal" | "external";
-  internalSlug?: string;
-  externalUrl?: string;
+  href: string;
   openInNewTab?: boolean;
 };
 
@@ -36,8 +34,7 @@ const socialIconMap: Record<string, React.ElementType> = {
 };
 
 function resolveHref(item: NavItem): string {
-  if (item.linkType === "external") return item.externalUrl || "#";
-  return item.internalSlug === "home" || !item.internalSlug ? "/" : `/${item.internalSlug}`;
+  return item.href || "#";
 }
 
 export function Footer({ settings, navigation }: { settings: any; navigation: any }) {

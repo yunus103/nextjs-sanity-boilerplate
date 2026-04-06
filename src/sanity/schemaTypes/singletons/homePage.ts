@@ -15,7 +15,47 @@ export const homePageType = defineType({
       fields: [defineField({ name: "alt", title: "Alt Metni", type: "string", validation: (Rule) => Rule.required() })],
     }),
     defineField({ name: "heroCtaLabel", title: "Hero Buton Metni", type: "string" }),
-    defineField({ name: "heroCtaSlug", title: "Hero Buton Linki (Slug)", type: "string", description: "Örn: iletisim, hizmetler" }),
+    defineField({
+      name: "heroCtaLink",
+      title: "Hero Buton Linki",
+      type: "object",
+      fields: [
+        defineField({
+          name: "linkType",
+          title: "Link Tipi",
+          type: "string",
+          options: {
+            list: [
+              { title: "İç Sayfa (Önerilen)", value: "internal" },
+              { title: "Manuel Link", value: "manual" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "internal",
+        }),
+        defineField({
+          name: "internal",
+          title: "İç Sayfa Seç",
+          type: "reference",
+          to: [
+            { type: "service" },
+            { type: "project" },
+            { type: "blogPost" },
+            { type: "aboutPage" },
+            { type: "contactPage" },
+            { type: "legalPage" },
+          ],
+          hidden: ({ parent }) => parent?.linkType !== "internal",
+        }),
+        defineField({
+          name: "manual",
+          title: "Manuel Link",
+          type: "string",
+          description: "Örn: /blog, /galeri veya https://google.com (Link başındaki / işaretini unutmayın)",
+          hidden: ({ parent }) => parent?.linkType !== "manual",
+        }),
+      ],
+    }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
 });

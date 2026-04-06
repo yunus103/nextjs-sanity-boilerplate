@@ -93,9 +93,9 @@ const tagMap = {
 
 | Cache Tag | Kapsayan Şema | Etkilenen Sayfalar |
 |-----------|---------------|--------------------|
-| `layout` | `siteSettings`, `navigation` | Tüm sayfalar (header/footer) |
+| `layout` | `siteSettings`, `navigation` | Tüm sayfalar (header, footer, favicon, siteName) |
 | `faq` | `faq` | FAQ kullanılan sayfalar |
-| `home` | `homePage` | `/` |
+| `home` | `homePage` | `/` (Home Hero, SEO) |
 | `about` | `aboutPage` | `/hakkimizda` |
 | `contact` | `contactPage` | `/iletisim` |
 | `blog` | `blogPost` | `/blog`, `/blog/[slug]` |

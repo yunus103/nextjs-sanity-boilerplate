@@ -63,8 +63,8 @@ Tarayıcıda:
    - URL: `https://siteadi.com/api/revalidate`
    - HTTP Method: `POST`
    - Trigger on: **Create, Update, Delete**
-   - Secret: `.env.local`'daki `SANITY_WEBHOOK_SECRET` değerini 'Secret' alanına ekleyin (Header olarak değil)
-3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini webhook'ta ayarladığın şifre ile güncelle
+   - Secret: Sanity Dashboard'daki Secret alanına `.env.local`'daki `SANITY_WEBHOOK_SECRET` değerini girin. (Header olarak değil, direkt dashboard'daki Secret kutusuna)
+3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini güncelleyin. Uygulama `@sanity/webhook` paketi ile imzayı otomatik doğrular.
 
 ### 4. Draft Mode Kurulumu
 
@@ -90,9 +90,8 @@ Draft mode'u aktifleştirmek için: `/api/draft/enable?secret=SECRET&redirect=/`
 - [ ] `package.json` içinde `"name"` alanını güncelle
 - [ ] `.env.local` içindeki tüm `your-*` placeholder değerlerini gerçek değerlerle değiştir
 - [ ] `src/app/layout.tsx` içindeki `"Site Adı"` metnini güncelle
-- [ ] `tailwind.config.ts` → `globals.css` üzerinden marka renklerini güncelle
-- [ ] `public/` klasörüne `favicon.ico` koy
-- [ ] Sanity Studio'yu aç (`/studio`), **Site Ayarları** ve **Navigasyon** dokümanlarını doldur
+- [ ] `src/app/globals.css` içindeki `:root` ve `.dark` bloklarından marka renklerini güncelle
+- [ ] Sanity Studio'yu aç (`/studio`), **Site Ayarları** (Logo, Favicon) ve **Navigasyon** dokümanlarını doldur
 - [ ] Vercel'e deploy et, tüm `.env.local` env değişkenlerini Vercel paneline ekle
 - [ ] Sanity Dashboard → Webhooks: `https://siteadi.com/api/revalidate` ekle
 

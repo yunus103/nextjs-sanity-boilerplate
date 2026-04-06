@@ -1,30 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { RiMenu3Line, RiCloseLine, RiArrowDownSLine } from "react-icons/ri";
+import { cn } from "@/lib/utils";
 
 type NavItem = {
   label: string;
-  linkType: "internal" | "external";
-  internalSlug?: string;
-  externalUrl?: string;
+  href: string;
   openInNewTab?: boolean;
   subLinks?: NavItem[];
 };
 
 function resolveHref(item: NavItem): string {
-  if (item.linkType === "external") return item.externalUrl || "#";
-  return item.internalSlug === "home" || !item.internalSlug ? "/" : `/${item.internalSlug}`;
+  return item.href || "#";
 }
 
 export function Header({ settings, navigation }: { settings: any; navigation: any }) {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const links: NavItem[] = navigation?.headerLinks || [];
+
+  // Sayfa değiştiğinde menüyü kapat
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  const isActive = (item: NavItem) => {
+    const href = resolveHref(item);
+    if (href === "/" && pathname !== "/") return false;
+    return pathname.startsWith(href);
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,25 +52,14 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
                   className="h-full w-auto object-contain object-left dark:hidden"
                   priority
                 />
-                {settings?.logoDark ? (
-                  <SanityImage
-                    image={settings.logoDark}
-                    width={800}
-                    height={200}
-                    fit="max"
-                    className="h-full w-auto object-contain object-left hidden dark:block"
-                    priority
-                  />
-                ) : (
-                  <SanityImage
-                    image={settings.logo}
-                    width={800}
-                    height={200}
-                    fit="max"
-                    className="h-full w-auto object-contain object-left hidden dark:block grayscale invert opacity-90"
-                    priority
-                  />
-                )}
+                <SanityImage
+                  image={settings.logo}
+                  width={800}
+                  height={200}
+                  fit="max"
+                  className="h-full w-auto object-contain object-left hidden dark:block grayscale invert opacity-90"
+                  priority
+                />
               </>
             ) : (
               <span className="font-bold text-xl tracking-tight leading-none">{settings?.siteName}</span>
@@ -70,7 +70,7 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
           {links.map((item, i) => (
-            <DesktopNavItem key={i} item={item} />
+            <DesktopNavItem key={i} item={item} active={isActive(item)} />
           ))}
           <ThemeToggle />
         </nav>
@@ -99,8 +99,10 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
                   <div className="flex items-center justify-between">
                     <Link
                       href={resolveHref(item)}
-                      onClick={() => !item.subLinks && setMenuOpen(false)}
-                      className="text-base font-medium py-2 transition-colors hover:text-primary"
+                      className={cn(
+                        "text-base font-medium py-2 transition-colors hover:text-primary",
+                        isActive(item) ? "text-primary" : "text-foreground"
+                      )}
                     >
                       {item.label}
                     </Link>
@@ -111,8 +113,10 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
                         <Link
                           key={j}
                           href={resolveHref(sub)}
-                          onClick={() => setMenuOpen(false)}
-                          className="text-sm font-medium py-2 text-muted-foreground hover:text-primary transition-colors"
+                          className={cn(
+                            "text-sm font-medium py-2 transition-colors hover:text-primary",
+                            isActive(sub) ? "text-primary" : "text-muted-foreground"
+                          )}
                         >
                           {sub.label}
                         </Link>
@@ -129,8 +133,13 @@ export function Header({ settings, navigation }: { settings: any; navigation: an
   );
 }
 
-function DesktopNavItem({ item }: { item: NavItem }) {
+function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Alt menü linklerinden biri aktifse üst menüyü de aktif boyarız
+  const isSubActive = item.subLinks?.some(sub => pathname === resolveHref(sub));
+  const reallyActive = active || isSubActive;
 
   if (!item.subLinks || item.subLinks.length === 0) {
     return (
@@ -138,7 +147,10 @@ function DesktopNavItem({ item }: { item: NavItem }) {
         href={resolveHref(item)}
         target={item.openInNewTab ? "_blank" : undefined}
         rel={item.openInNewTab ? "noopener noreferrer" : undefined}
-        className="text-sm font-medium transition-colors hover:text-primary"
+        className={cn(
+          "text-sm font-medium transition-colors hover:text-primary",
+          reallyActive ? "text-primary font-semibold" : "text-foreground/70"
+        )}
       >
         {item.label}
       </Link>
@@ -153,7 +165,10 @@ function DesktopNavItem({ item }: { item: NavItem }) {
     >
       <Link
         href={resolveHref(item)}
-        className="flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary"
+        className={cn(
+          "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
+          reallyActive ? "text-primary font-semibold" : "text-foreground/70"
+        )}
       >
         {item.label}
         <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -171,17 +186,23 @@ function DesktopNavItem({ item }: { item: NavItem }) {
             className="absolute left-0 top-full pt-4 min-w-[200px]"
           >
             <div className="bg-popover border rounded-xl shadow-xl p-2 overflow-hidden">
-              {item.subLinks.map((sub, j) => (
-                <Link
-                  key={j}
-                  href={resolveHref(sub)}
-                  target={sub.openInNewTab ? "_blank" : undefined}
-                  rel={sub.openInNewTab ? "noopener noreferrer" : undefined}
-                  className="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                >
-                  {sub.label}
-                </Link>
-              ))}
+              {item.subLinks.map((sub, j) => {
+                const subActive = pathname === resolveHref(sub);
+                return (
+                  <Link
+                    key={j}
+                    href={resolveHref(sub)}
+                    target={sub.openInNewTab ? "_blank" : undefined}
+                    rel={sub.openInNewTab ? "noopener noreferrer" : undefined}
+                    className={cn(
+                      "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg hover:bg-muted transition-colors",
+                      subActive ? "text-primary bg-primary/5" : "text-foreground/70"
+                    )}
+                  >
+                    {sub.label}
+                  </Link>
+                );
+              })}
             </div>
           </motion.div>
         )}

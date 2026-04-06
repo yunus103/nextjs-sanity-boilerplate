@@ -6,22 +6,27 @@ export const layoutQuery = groq`{
   "settings": *[_type == "siteSettings"][0] {
     siteName, siteTagline,
     logo { asset->{ _id, url, metadata { lqip, dimensions } }, hotspot, crop },
-    logoDark { asset->{ _id, url, metadata { lqip, dimensions } }, hotspot, crop },
     logoHeight,
+    favicon { asset->{ _id, url } },
     contactInfo { phone, email, address, whatsappNumber, mapIframe },
     socialLinks[] { platform, url },
     gaId, gtmId
   },
   "navigation": *[_type == "navigation"][0] {
-    headerLinks[] { label, linkType, internalSlug, externalUrl, openInNewTab, subLinks[] { label, linkType, internalSlug, externalUrl, openInNewTab } },
-    footerLinks[] { label, linkType, internalSlug, externalUrl, openInNewTab, subLinks[] { label, linkType, internalSlug, externalUrl, openInNewTab } }
+    headerLinks[] { label, href, openInNewTab, subLinks[] { label, href, openInNewTab } },
+    footerLinks[] { label, href, openInNewTab, subLinks[] { label, href, openInNewTab } }
   }
 }`;
 
 // ─── Sayfalar ──────────────────────────────────────────────────────────────────
 
 export const homePageQuery = groq`*[_type == "homePage"][0] {
-  heroTitle, heroSubtitle, heroCtaLabel, heroCtaSlug,
+  heroTitle, heroSubtitle, heroCtaLabel,
+  heroCtaLink {
+    linkType,
+    manual,
+    internal->{ _type, "slug": slug.current }
+  },
   heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   seo
 }`;
@@ -111,5 +116,7 @@ export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
   "title": defaultSeo.metaTitle,
   "description": defaultSeo.metaDescription,
   "ogImage": defaultOgImage,
-  siteName
+  siteName,
+  siteTagline,
+  favicon { asset->{ _id, url } }
 }`;

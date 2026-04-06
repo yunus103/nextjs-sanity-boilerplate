@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
 import { client } from "@/sanity/lib/client";
 import { allSlugsForSitemapQuery } from "@/sanity/lib/queries";
+import { getSiteUrl } from "@/lib/utils";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL!;
+  const base = getSiteUrl();
   const data = await client.fetch(allSlugsForSitemapQuery);
 
   const staticRoutes: MetadataRoute.Sitemap = [
