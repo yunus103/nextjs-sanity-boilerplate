@@ -63,7 +63,7 @@ Tarayıcıda:
    - URL: `https://siteadi.com/api/revalidate`
    - HTTP Method: `POST`
    - Trigger on: **Create, Update, Delete**
-   - Header: `x-webhook-secret` = `.env.local`'daki `SANITY_WEBHOOK_SECRET` değeri
+   - Secret: `.env.local`'daki `SANITY_WEBHOOK_SECRET` değerini 'Secret' alanına ekleyin (Header olarak değil)
 3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini webhook'ta ayarladığın şifre ile güncelle
 
 ### 4. Draft Mode Kurulumu
