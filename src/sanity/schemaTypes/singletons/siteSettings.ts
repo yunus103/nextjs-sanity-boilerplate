@@ -59,6 +59,12 @@ export const siteSettingsType = defineType({
     defineField({ name: "socialLinks", title: "Sosyal Medya Hesapları", type: "array", of: [{ type: "socialLink" }] }),
     defineField({ name: "gaId", title: "Google Analytics ID", type: "string", description: "Örn: G-XXXXXXXXXX" }),
     defineField({ name: "gtmId", title: "Google Tag Manager ID", type: "string", description: "Örn: GTM-XXXXXXX" }),
+    defineField({
+      name: "googleSearchConsoleId",
+      title: "Google Search Console Doğrulama Kodu",
+      type: "string",
+      description: "Search Console meta etiketi içerisindeki 'content' değerini buraya girin. Örn: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    }),
   ],
   preview: { select: { title: "siteName" } },
 });

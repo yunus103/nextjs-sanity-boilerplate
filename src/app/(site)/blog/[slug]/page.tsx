@@ -23,12 +23,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getClient().fetch(blogPostBySlugQuery, { slug }, { next: { tags: ["blog"] } });
   if (!post) return {};
-  return buildMetadata({
+  
+  const baseSeo = await buildMetadata({
     title: post.title,
     description: post.excerpt,
     canonicalPath: `/blog/${slug}`,
     pageSeo: post.seo,
   });
+
+  if (post.seoTags?.length) {
+    baseSeo.keywords = post.seoTags;
+  }
+
+  return baseSeo;
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -48,21 +55,27 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
         <FadeIn direction="up">
-          <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/blog" />}>
-            ← Blog'a Dön
+          <Button variant="ghost" className="mb-8 -ml-2" asChild>
+            <Link href="/blog">← Blog'a Dön</Link>
           </Button>
 
-          {post.publishedAt && (
-            <time className="text-sm text-muted-foreground block mb-4">
-              {formatDate(post.publishedAt)}
-            </time>
-          )}
+          <div className="flex items-center gap-3 mb-4">
+            {post.category && (
+              <Link
+                href={`/blog?category=${encodeURIComponent(post.category.title)}`}
+                className="text-xs font-medium px-3 py-1 bg-primary/10 text-primary rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {post.category.title}
+              </Link>
+            )}
+            {post.publishedAt && (
+              <time className="text-sm text-muted-foreground block">
+                {formatDate(post.publishedAt)}
+              </time>
+            )}
+          </div>
 
-          <h1 className="text-4xl font-bold mb-6">{post.title}</h1>
-
-          {post.excerpt && (
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">{post.excerpt}</p>
-          )}
+          <h1 className="text-4xl font-bold mb-6 pt-2">{post.title}</h1>
         </FadeIn>
 
         {post.mainImage && (
@@ -82,6 +95,21 @@ export default async function BlogPostPage({ params }: Props) {
         <FadeIn delay={0.25}>
           <RichText value={post.body} />
         </FadeIn>
+
+        {post.seoTags?.length > 0 && (
+          <FadeIn delay={0.3}>
+            <div className="mt-16 pt-8 border-t">
+              <h3 className="text-sm font-semibold mb-3 text-muted-foreground">Etiketler:</h3>
+              <div className="flex flex-wrap gap-2">
+                {post.seoTags.map((tag: string) => (
+                  <span key={tag} className="text-sm bg-secondary px-3 py-1 rounded-md text-secondary-foreground">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        )}
       </article>
     </>
   );

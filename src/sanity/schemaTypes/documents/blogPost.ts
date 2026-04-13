@@ -9,6 +9,13 @@ export const blogPostType = defineType({
     defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
     defineField({ name: "publishedAt", title: "Yayın Tarihi", type: "datetime", initialValue: () => new Date().toISOString() }),
     defineField({
+      name: "category",
+      title: "Kategori",
+      type: "reference",
+      to: [{ type: "blogCategory" }],
+      description: "Blog yazısının ait olduğu kategori",
+    }),
+    defineField({
       name: "mainImage",
       title: "Kapak Görseli",
       type: "image",
@@ -60,6 +67,14 @@ export const blogPostType = defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: "seoTags",
+      title: "SEO Etiketleri",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+      description: "SEO ve sayfa altı etiketleri için etiketler ekleyin (Enter ile ayırın).",
     }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],

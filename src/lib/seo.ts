@@ -86,5 +86,8 @@ export async function buildMetadata(params: BuildMetadataParams = {}): Promise<M
       description: description || "",
       ...(ogImageUrl && { images: [ogImageUrl] }),
     },
+    verification: {
+      google: defaults?.googleSearchConsoleId || undefined,
+    },
   };
 }

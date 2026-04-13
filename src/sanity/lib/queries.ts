@@ -10,7 +10,7 @@ export const layoutQuery = groq`{
     favicon { asset->{ _id, url } },
     contactInfo { phone, email, address, whatsappNumber, mapIframe },
     socialLinks[] { platform, url },
-    gaId, gtmId
+    gaId, gtmId, googleSearchConsoleId
   },
   "navigation": *[_type == "navigation"][0] {
     headerLinks[] { label, href, openInNewTab, subLinks[] { label, href, openInNewTab } },
@@ -44,12 +44,12 @@ export const contactPageQuery = groq`*[_type == "contactPage"][0] {
 // ─── Blog ──────────────────────────────────────────────────────────────────────
 
 export const blogListQuery = groq`*[_type == "blogPost"] | order(publishedAt desc) {
-  title, slug, excerpt, publishedAt,
+  title, slug, excerpt, publishedAt, category->{title},
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current == $slug][0] {
-  title, slug, publishedAt, excerpt,
+  title, slug, publishedAt, excerpt, category->{title}, seoTags,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   body[] {
     ...,
@@ -59,6 +59,10 @@ export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current ==
     }
   },
   seo
+}`;
+
+export const blogCategoriesQuery = groq`*[_type == "blogCategory"] | order(title asc) {
+  _id, title
 }`;
 
 // ─── Hizmetler ─────────────────────────────────────────────────────────────────
@@ -118,5 +122,6 @@ export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
   "ogImage": defaultOgImage,
   siteName,
   siteTagline,
-  favicon { asset->{ _id, url } }
+  favicon { asset->{ _id, url } },
+  googleSearchConsoleId
 }`;
