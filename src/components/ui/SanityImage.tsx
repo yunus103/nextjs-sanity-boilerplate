@@ -15,6 +15,7 @@ type SanityImageProps = {
   className?: string;
   priority?: boolean;
   fit?: "crop" | "fill" | "fillmax" | "max" | "scale" | "min";
+  objectFit?: import("react").CSSProperties["objectFit"];
 };
 
 export function SanityImage({
@@ -26,6 +27,7 @@ export function SanityImage({
   className,
   priority = false,
   fit = "crop",
+  objectFit,
 }: SanityImageProps) {
   if (!image?.asset) return null;
 
@@ -60,7 +62,7 @@ export function SanityImage({
       priority={priority}
       style={{ 
         objectPosition,
-        objectFit: fill ? "cover" : undefined 
+        objectFit: objectFit || (fill ? "cover" : undefined) 
       }}
       placeholder={blurDataURL ? "blur" : "empty"}
       blurDataURL={blurDataURL}

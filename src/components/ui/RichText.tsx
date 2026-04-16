@@ -57,6 +57,11 @@ const components: PortableTextComponents = {
     },
   },
   marks: {
+    textColor: ({ value, children }) => {
+      // @sanity/color-input stores its color info inside the `hex` property.
+      const colorHex = value?.hex;
+      return <span style={{ color: colorHex }}>{children}</span>;
+    },
     link: ({ value, children }) => {
       const isInternal = value?.href?.startsWith("/");
       return isInternal ? (

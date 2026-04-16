@@ -5,7 +5,7 @@ import { schemaTypes } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
 import { singletonPlugin } from "./src/sanity/plugins/singletonPlugin";
 
-const SINGLETONS = ["siteSettings", "navigation", "homePage", "aboutPage", "contactPage"];
+const SINGLETONS = ["siteSettings", "navigation", "homePage", "aboutPage", "contactPage", "blogPage", "servicesPage", "projectsPage"];
 
 export default defineConfig({
   basePath: "/studio",

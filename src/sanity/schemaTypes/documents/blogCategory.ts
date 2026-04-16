@@ -12,5 +12,13 @@ export const blogCategoryType = defineType({
       validation: (Rule) => Rule.required(),
       description: "Sitede görünecek kategori adını girin.",
     }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "title" },
+      validation: (Rule) => Rule.required(),
+      description: "URL'de görünecek kategori ismi (otomatik oluşturabilirsiniz).",
+    }),
   ],
 });

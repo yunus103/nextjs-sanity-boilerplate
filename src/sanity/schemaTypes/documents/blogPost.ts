@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity";
+import React from "react";
+import { ColorInput } from "../../components/ColorInput";
 
 export const blogPostType = defineType({
   name: "blogPost",
@@ -36,7 +38,29 @@ export const blogPostType = defineType({
       title: "İçerik",
       type: "array",
       of: [
-        { type: "block" },
+        { 
+          type: "block",
+          marks: {
+            annotations: [
+              {
+                name: "textColor",
+                type: "object",
+                title: "Metin Rengi",
+                icon: () => React.createElement('span', { style: { fontSize: '1.2em' } }, '💧'),
+                fields: [
+                  {
+                    name: "hex",
+                    type: "string",
+                    title: "Renk Seçin",
+                    components: {
+                      input: ColorInput,
+                    },
+                  },
+                ],
+              }
+            ]
+          }
+        },
         {
           type: "image",
           options: { hotspot: true },

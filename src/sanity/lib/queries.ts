@@ -41,15 +41,27 @@ export const contactPageQuery = groq`*[_type == "contactPage"][0] {
   pageTitle, pageSubtitle, formTitle, successMessage, seo
 }`;
 
+export const blogPageQuery = groq`*[_type == "blogPage"][0] {
+  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+}`;
+
+export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
+  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+}`;
+
+export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
+  pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
+}`;
+
 // ─── Blog ──────────────────────────────────────────────────────────────────────
 
 export const blogListQuery = groq`*[_type == "blogPost"] | order(publishedAt desc) {
-  title, slug, excerpt, publishedAt, category->{title},
+  title, slug, excerpt, publishedAt, category->{title, slug},
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current == $slug][0] {
-  title, slug, publishedAt, excerpt, category->{title}, seoTags,
+  _id, title, slug, publishedAt, excerpt, category->{_id, title, slug}, seoTags,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   body[] {
     ...,
@@ -62,7 +74,17 @@ export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current ==
 }`;
 
 export const blogCategoriesQuery = groq`*[_type == "blogCategory"] | order(title asc) {
-  _id, title
+  _id, title, slug
+}`;
+
+export const blogListByCategorySlugQuery = groq`*[_type == "blogPost" && category->slug.current == $slug] | order(publishedAt desc) {
+  title, slug, excerpt, publishedAt, category->{title, slug},
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
+export const blogRelatedPostsQuery = groq`*[_type == "blogPost" && category._ref == $categoryId && _id != $currentPostId] | order(publishedAt desc)[0...3] {
+  title, slug, excerpt, publishedAt, category->{title, slug},
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
 // ─── Hizmetler ─────────────────────────────────────────────────────────────────
@@ -109,6 +131,7 @@ export const legalPageBySlugQuery = groq`*[_type == "legalPage" && slug.current 
 
 export const allSlugsForSitemapQuery = groq`{
   "blogPosts": *[_type == "blogPost" && defined(slug.current)] { "slug": slug.current, _updatedAt },
+  "blogCategories": *[_type == "blogCategory" && defined(slug.current)] { "slug": slug.current, _updatedAt },
   "services": *[_type == "service" && defined(slug.current)] { "slug": slug.current, _updatedAt },
   "projects": *[_type == "project" && defined(slug.current)] { "slug": slug.current, _updatedAt },
   "legalPages": *[_type == "legalPage" && defined(slug.current)] { "slug": slug.current, _updatedAt }
