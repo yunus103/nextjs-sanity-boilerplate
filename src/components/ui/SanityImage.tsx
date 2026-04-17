@@ -32,6 +32,12 @@ type SanityImageProps = {
    * @default 75
    */
   quality?: number;
+  /**
+   * Blur placeholder'ı devre dışı bırakır.
+   * Hero gibi priority görsellerde kullanışlıdır.
+   * @default false
+   */
+  noBlur?: boolean;
 };
 
 export function SanityImage({
@@ -45,18 +51,12 @@ export function SanityImage({
   fit = "crop",
   objectFit,
   quality = 75,
+  noBlur = false,
 }: SanityImageProps) {
   if (!image?.asset) return null;
 
   /**
    * Sanity CDN Loader — Next.js'in her responsive breakpoint için çağırdığı fonksiyon.
-   *
-   * Bu sayede:
-   *  - Vercel Image Optimization kotası tüketilmez.
-   *  - Sanity'nin kendi CDN'i (cdn.sanity.io) görseli sunar → dünya geneli edge cache.
-   *  - `auto("format")` → WebP/AVIF formatını tarayıcıya göre otomatik seçer.
-   *  - `builder.image(image)` → hotspot ve crop alanlarını URL parametrelerine
-   *    otomatik dönüştürür; kırpma işlemi Sanity CDN tarafında yapılır.
    */
   const sanityLoader = ({
     width: loaderWidth,
@@ -65,30 +65,31 @@ export function SanityImage({
     width: number;
     quality?: number;
   }) => {
-    // builder.image(image) → hotspot & crop otomatik dahil edilir
+    // 1920px üst sınırını uygula
+    const finalWidth = Math.min(loaderWidth, 1920);
+
     let builder = urlForImage(image)!
       .auto("format")
-      .width(loaderWidth)
+      .width(finalWidth)
       .quality(loaderQuality ?? quality ?? 75);
 
     if (!fill && height) {
-      // Verilen width/height oranını koruyarak CDN tarafında kırp
       const aspectRatio = height / width;
       builder = builder
-        .height(Math.round(loaderWidth * aspectRatio))
+        .height(Math.round(finalWidth * aspectRatio))
         .fit(fit);
+    } else {
+      // fill modunda upscale'i önlemek için fit("max")
+      builder = builder.fit("max");
     }
 
     return builder.url();
   };
 
-  const blurDataURL = getImageLqip(image);
+  const blurDataURL = noBlur ? undefined : getImageLqip(image);
 
   /**
    * Hotspot → CSS object-position.
-   * Sanity hotspot değerleri [0-1] aralığındadır.
-   * CDN zaten hotspot'a göre kırpıyor olsa da, `fill` modunda
-   * CSS tarafı da ayrıca ihtiyaç duyabilir (tarayıcı layout).
    */
   const objectPosition = image.hotspot
     ? `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`
@@ -99,10 +100,6 @@ export function SanityImage({
   return (
     <Image
       loader={sanityLoader}
-      /**
-       * `loader` kullanıldığında `src` yalnızca Next.js'in iç cache key'i için
-       * kullanılır — gerçek URL loader'dan gelir.
-       */
       src={image.asset._ref ?? image.asset._id ?? "sanity-image"}
       alt={image.alt ?? ""}
       width={fill ? undefined : width}
