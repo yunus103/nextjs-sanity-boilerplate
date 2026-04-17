@@ -174,6 +174,7 @@ export function Lightbox({
                 fit="max"
                 objectFit="contain"
                 sizes="100vw"
+                quality={95}
                 className="pointer-events-none select-none max-h-full"
               />
             </motion.div>

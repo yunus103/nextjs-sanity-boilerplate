@@ -40,6 +40,7 @@ export function HeroSection({ data }: HeroSectionProps) {
             image={data.heroImage}
             fill
             sizes="100vw"
+            quality={90}
             className="object-cover"
             priority
           />
