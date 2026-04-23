@@ -7,7 +7,7 @@ export const legalPageType = defineType({
   fields: [
     defineField({ name: "title", title: "Başlık", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (Rule) => Rule.required() }),
-    defineField({ name: "body", title: "İçerik", type: "array", of: [{ type: "block" }] }),
+    defineField({ name: "body", title: "İçerik", type: "array", of: [{ type: "block" }, { type: "customHtml" }] }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
 });

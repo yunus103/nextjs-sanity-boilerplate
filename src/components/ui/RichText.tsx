@@ -55,6 +55,15 @@ const components: PortableTextComponents = {
         </figure>
       );
     },
+    customHtml: ({ value }) => {
+      if (!value?.html) return null;
+      return (
+        <div
+          className="my-6 overflow-x-auto"
+          dangerouslySetInnerHTML={{ __html: value.html }}
+        />
+      );
+    },
   },
   marks: {
     textColor: ({ value, children }) => {

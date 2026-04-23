@@ -90,6 +90,7 @@ export const blogPostType = defineType({
             }),
           ],
         },
+        { type: "customHtml" },
       ],
     }),
     defineField({

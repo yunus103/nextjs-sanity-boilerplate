@@ -50,6 +50,7 @@ export const serviceType = defineType({
             }),
           ],
         },
+        { type: "customHtml" },
       ],
     }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
