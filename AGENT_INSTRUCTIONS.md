@@ -18,7 +18,7 @@ Welcome, Agent. This document is your primary guide for understanding, maintaini
 - **Pages**:
   - `(site)/page.tsx`: Home Page.
   - `(site)/hizmetler/[slug]/page.tsx`: Dynamic Service pages.
-  - `(site)/blog/[slug]/page.tsx`: Dynamic Blog pages.
+  - `(site)/[slug]/page.tsx`: Dynamic Blog details pages.
   - `(site)/projeler/[slug]/page.tsx`: Dynamic Project pages.
 
 ### Sanity Content Studio (`src/sanity`)
@@ -72,7 +72,14 @@ Welcome, Agent. This document is your primary guide for understanding, maintaini
 ### SEO & Meta Management
 - **`buildMetadata` Helper**: Always use `buildMetadata`. It standardizes titles: Home is `Site | Slogan`, Inner is `Page | Site`.
 - **Dynamic Icons**: Favicon is served dynamically via Metadata API from Sanity settings.
-- **Schema.org**: Implement JSON-LD for Organization, Articles, and Services using the `JsonLd` component.
+- **Dynamic Schema.org (JSON-LD)**: 
+  - Dynamic `Organization` & `WebSite` schemas are auto-injected site-wide in `RootLayout`.
+  - Dynamic `BreadcrumbList` is auto-injected by `<Breadcrumbs>` on path-basis.
+  - Dynamic `FAQPage` is auto-injected by `<FAQ>` on FAQs render.
+  - Dynamic `Article` / `Service` / `CreativeWork` schemas are auto-injected on corresponding details pages.
+- **Canonical Routing & Sitemap Consistency**: 
+  - Ensure canonical paths and structured data URLs are aligned with the actual Next.js mounted endpoints (e.g., dynamic blog details at root `/[slug]` must have the canonical `/${slug}`, NOT `/blog/${slug}`).
+- **SEO-indexable FAQ**: Do NOT conditionally render accordion contents (`activeIndex === index && ...`). Instead, animate CSS height while keeping elements in the DOM so that Google and other search bots can index 100% of questions and answers.
 - **Alt Tags**: Alt tags for images are MANDATORY in Sanity schemas.
 
 ---

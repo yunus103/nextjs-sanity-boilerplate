@@ -12,6 +12,10 @@ export function formatDate(dateString: string, locale = "tr-TR"): string {
 }
 
 export function getSiteUrl(): string {
-  const url = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  let url = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  url = url.trim();
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
   return url.replace(/\/$/, "");
 }

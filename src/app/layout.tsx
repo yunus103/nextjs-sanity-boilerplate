@@ -6,6 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 import { client } from "@/sanity/lib/client";
 import { layoutQuery } from "@/sanity/lib/queries";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/seo/JsonLd";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.className}>
         {settings?.gtmId && <GoogleTagManager gtmId={settings.gtmId} />}
         {settings?.gaId && <GoogleAnalytics gaId={settings.gaId} />}
+        <JsonLd data={organizationJsonLd(settings)} />
+        <JsonLd data={websiteJsonLd(settings)} />
         {children}
       </body>
     </html>

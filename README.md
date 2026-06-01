@@ -102,12 +102,12 @@ Draft mode'u aktifleştirmek için: `/api/draft/enable?secret=SECRET&redirect=/`
 src/
 ├── app/
 │   ├── (site)/           # Kullanıcıya görünen tüm sayfalar
+│   │   ├── [slug]/       # Dinamik blog detay sayfaları
 │   │   ├── page.tsx      # Ana sayfa
-│   │   ├── blog/         # Blog listesi + detay
-│   │   ├── hizmetler/    # Hizmet detay sayfaları
-│   │   ├── projeler/     # Proje detay sayfaları
+│   │   ├── blog/         # Blog listesi hub sayfası
+│   │   ├── hizmetler/    # Hizmet hub ve [slug] detay sayfaları
+│   │   ├── projeler/     # Proje hub ve [slug] detay sayfaları
 │   │   ├── iletisim/     # İletişim sayfası
-│   │   └── yasal/        # Yasal sayfalar
 │   ├── api/              # API route'ları
 │   │   ├── revalidate/   # ISR webhook
 │   │   ├── draft/        # Draft mode enable/disable
@@ -119,16 +119,35 @@ src/
 │   └── robots.ts         # robots.txt
 ├── components/
 │   ├── forms/            # ContactForm
-│   ├── layout/           # Header, Footer, ThemeProvider, vb.
+│   ├── layout/           # Header, Footer, vb.
 │   ├── seo/              # JsonLd
-│   └── ui/               # SanityImage, RichText, FadeIn, AnimateGroup + shadcn
+│   └── ui/               # SanityImage, RichText, FAQ, Breadcrumbs, FadeIn
 ├── lib/
 │   ├── env.ts            # Type-safe env validasyonu
 │   ├── seo.ts            # buildMetadata()
-│   └── utils.ts          # cn(), formatDate()
+│   └── utils.ts          # cn(), getSiteUrl(), formatDate()
 └── sanity/
     ├── lib/              # client.ts, image.ts, queries.ts
     ├── plugins/          # singletonPlugin
     ├── schemaTypes/      # Tüm Sanity şemaları
     └── structure.ts      # Studio sol panel yapısı
 ```
+
+---
+
+## SEO & Yapılandırılmış Veri (Structured Data) Yapılandırması
+
+Bu boilerplate, Google ve diğer arama motorları için en yüksek standartlarda SEO otomasyonuna sahiptir.
+
+### 1. Domain ve Canonical URL Kurulumu (`NEXT_PUBLIC_SITE_URL`)
+*   `.env.local` dosyasındaki `NEXT_PUBLIC_SITE_URL` değişkeni, arama motorlarının canonical (özgün) etiketlerini, sitemap girdilerini ve OpenGraph görsel yollarını oluşturmak için kullanılır.
+*   **Edge-case Koruması:** `getSiteUrl()` fonksiyonu, girilen URL'nin başında `https://` protokolü olmasa bile bunu otomatik algılar, sonundaki `/` işaretlerini temizler ve güvenli şekilde derler.
+
+### 2. Otomatik Yapılandırılmış Veriler (JSON-LD)
+Aşağıdaki zengin arama sonuçları şemaları kod yazmaya gerek kalmadan tamamen otomatik olarak yönetilir:
+*   **Site-wide Organization & WebSite:** Root Layout'ta `siteSettings`'ten gelen logo, iletişim ve sosyal ağ verileriyle otomatik oluşturulur.
+*   **Ekmek Kırıntıları (Breadcrumbs):** İç sayfalarda `<Breadcrumbs>` bileşeni çağrıldığı anda dinamik URL hiyerarşisi üzerinden `BreadcrumbList` şemasını oluşturup sayfaya enjekte eder.
+*   **Taranabilir Sıkça Sorulan Sorular (FAQ):** `<FAQ>` bileşeni kullanıldığında, arama botlarının kapalı cevapları da %100 okuyabilmesi için answers DOM'da saklanır ve `FAQPage` şeması dinamik olarak sayfaya basılır.
+*   **Blog Yazıları:** `[slug]/page.tsx` rotasında dinamik `Article` şeması otomatik olarak basılır.
+*   **Hizmet & Projeler:** İlgili detay sayfalarında `Service` ve `CreativeWork` şemaları otomatik olarak yer alır.
+

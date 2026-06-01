@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RiArrowRightSLine, RiHome4Line } from "react-icons/ri";
+import { JsonLd, breadcrumbListJsonLd } from "@/components/seo/JsonLd";
 
 type BreadcrumbItem = {
   label: string;
@@ -33,7 +34,9 @@ export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[
   if (pathname === "/") return null;
 
   return (
-    <nav aria-label="Breadcrumb" className={`flex items-center text-sm text-muted-foreground ${className}`}>
+    <>
+      <JsonLd data={breadcrumbListJsonLd(breadcrumbs)} />
+      <nav aria-label="Breadcrumb" className={`flex items-center text-sm text-muted-foreground ${className}`}>
       <ol className="flex items-center gap-2 flex-wrap">
         <li>
           <Link 
@@ -65,5 +68,6 @@ export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[
         ))}
       </ol>
     </nav>
+    </>
   );
 }

@@ -253,20 +253,43 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 ```
 
-### `JsonLd`
+### `JsonLd` & Yapılandırılmış Veriler (Structured Data)
+
+Boilerplate üzerinde yer alan tüm şemalar dinamik olarak üretilir. `src/components/seo/JsonLd.tsx` altında toplanmış olan fonksiyonlar ile yapılandırılmış veriler enjekte edilebilir:
 
 ```typescript
-import { JsonLd, organizationJsonLd, articleJsonLd } from "@/components/seo/JsonLd";
+import { 
+  JsonLd, 
+  organizationJsonLd, 
+  websiteJsonLd, 
+  articleJsonLd, 
+  faqPageJsonLd, 
+  breadcrumbListJsonLd,
+  serviceJsonLd,
+  projectJsonLd
+} from "@/components/seo/JsonLd";
 
-// Layout'ta (organizasyon)
+// 1. Organizasyon ve Site Tanımlama (Root Layout'ta Otomatik)
 <JsonLd data={organizationJsonLd(settings)} />
+<JsonLd data={websiteJsonLd(settings)} />
 
-// Blog detay sayfasında
+// 2. Blog Detay Sayfasında (Otomatik)
 <JsonLd data={articleJsonLd(post)} />
 
-// Özel schema
-<JsonLd data={{ "@context": "https://schema.org", "@type": "FAQPage", ... }} />
+// 3. Ekmek Kırıntıları Şeması (Breadcrumbs bileşeninde Otomatik)
+<JsonLd data={breadcrumbListJsonLd(breadcrumbs)} />
+
+// 4. Sıkça Sorulan Sorular Şeması (FAQ bileşeninde Otomatik)
+<JsonLd data={faqPageJsonLd(faqItems)} />
+
+// 5. Hizmetler & Projeler Detay Sayfasında (Otomatik)
+<JsonLd data={serviceJsonLd(service)} />
+<JsonLd data={projectJsonLd(project)} />
 ```
+
+### SEO Uyumlu FAQ Accordion
+Arama motorlarının Sıkça Sorulan Sorular cevaplarını okuyabilmesi için, answers block'ları DOM'dan kaldırılmamalıdır. Bileşen içerisinde `framer-motion` height animasyonları conditionally render (`activeIndex === index && ...`) yerine CSS height state geçişi ile yönetilir. Bu sayede tüm soru-cevap çiftleri server-side pre-rendered olarak kaynak HTML koduna basılır ve Google indeksine tam dahil edilir.
+
 
 ---
 
