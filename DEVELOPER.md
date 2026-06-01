@@ -98,10 +98,12 @@ const tagMap = {
 | `home` | `homePage` | `/` (Home Hero, SEO) |
 | `about` | `aboutPage` | `/hakkimizda` |
 | `contact` | `contactPage` | `/iletisim` |
-| `blog` | `blogPost` | `/blog`, `/blog/[slug]` |
-| `services` | `service` | `/hizmetler/[slug]` |
-| `projects` | `project` | `/projeler/[slug]` |
-| `legal` | `legalPage` | `/yasal/[slug]` |
+| `blogPage` | `blogPage` | `/blog` (Hero, SEO, CTA) |
+| `servicesPage` | `servicesPage` | `/hizmetler` (Hero, SEO, CTA) |
+| `projectsPage` | `projectsPage` | `/projeler` (Hero, SEO, CTA) |
+| `blog` | `blogPost` | `/[slug]` (Blog detay) ve `/blog` (Liste fallback'i) |
+| `services` | `service` | `/hizmetler/[slug]` ve `/hizmetler` (Liste fallback'i) |
+| `projects` | `project` | `/projeler/[slug]` ve `/projeler` (Liste fallback'i) |
 
 Webhook'ta `_type` alanı gönderilir, `tagMap` üzerinden ilgili tag bulunur ve `revalidateTag()` çalıştırılır.
 
@@ -199,6 +201,29 @@ import { motion } from "framer-motion";
     </motion.div>
   ))}
 </AnimateGroup>
+```
+
+### `LightboxGallery` (Dinamik Yükleme / Performance Best Practice)
+
+Ağır etkileşimli modallerin (örn. Lightbox) ilk sayfa yükleme boyutunu (bundle size) şişirmemesi için **her zaman dinamik import (`next/dynamic`)** yöntemiyle çağrılması önerilir:
+
+```tsx
+import dynamic from "next/dynamic";
+
+// Lightbox bileşenini yalnızca istemci tarafında ve gerektiğinde (Lazy load) yükler
+const LightboxGallery = dynamic(
+  () => import("@/components/ui/Lightbox").then((mod) => mod.LightboxGallery),
+  { ssr: false }
+);
+
+export default function GalleryPage({ images }) {
+  return (
+    <div className="container py-12">
+      <h1 className="text-3xl font-bold mb-8">Fotoğraf Galerisi</h1>
+      <LightboxGallery images={images} />
+    </div>
+  );
+}
 ```
 
 ### `buildMetadata`
