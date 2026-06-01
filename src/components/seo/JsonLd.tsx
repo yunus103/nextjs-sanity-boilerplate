@@ -1,6 +1,7 @@
 import { getSiteUrl } from "@/lib/utils";
+import { SiteSettings, BlogPost, SocialLink } from "@/types";
 
-export function JsonLd({ data }: { data: Record<string, any> }) {
+export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
@@ -9,7 +10,7 @@ export function JsonLd({ data }: { data: Record<string, any> }) {
   );
 }
 
-export function organizationJsonLd(settings: any) {
+export function organizationJsonLd(settings?: SiteSettings) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -20,11 +21,11 @@ export function organizationJsonLd(settings: any) {
     ...(settings?.contactInfo?.address && {
       address: { "@type": "PostalAddress", streetAddress: settings.contactInfo.address },
     }),
-    sameAs: settings?.socialLinks?.map((s: any) => s.url).filter(Boolean) || [],
+    sameAs: settings?.socialLinks?.map((s: SocialLink) => s.url).filter(Boolean) || [],
   };
 }
 
-export function articleJsonLd(post: any) {
+export function articleJsonLd(post?: BlogPost) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",

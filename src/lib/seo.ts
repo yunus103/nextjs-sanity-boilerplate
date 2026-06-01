@@ -3,11 +3,12 @@ import { client } from "@/sanity/lib/client";
 import { defaultSeoQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
+import { SanityImage } from "@/types";
 
 type PageSeo = {
   metaTitle?: string;
   metaDescription?: string;
-  ogImage?: any;
+  ogImage?: SanityImage;
   canonicalUrl?: string;
   noIndex?: boolean;
 };
@@ -15,7 +16,7 @@ type PageSeo = {
 type BuildMetadataParams = {
   title?: string;
   description?: string;
-  ogImage?: any;
+  ogImage?: SanityImage;
   canonicalPath?: string;
   noIndex?: boolean;
   pageSeo?: PageSeo;

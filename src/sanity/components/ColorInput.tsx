@@ -7,21 +7,22 @@ export function ColorInput(props: StringInputProps) {
   const { value, onChange } = props;
   
   // React'in input kasmasını engellemek için rengi önce yerel (lokal) state'te tutuyoruz
+  const [prevValue, setPrevValue] = useState(value);
   const [localValue, setLocalValue] = useState(value || "#000000");
 
-  // Dışarıdan veri gelirse lokal state'i eşitle
-  useEffect(() => {
-    if (value && value !== localValue) {
-      setLocalValue(value);
-    }
-  }, [value]);
+  // Dışarıdan gelen value değişirse lokal state'i doğrudan render aşamasında güncelle (React 18+ Best Practice)
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setLocalValue(value || "#000000");
+  }
 
   // Kullanıcı rengi sürüklerken saniyede 100 kere Sanity'ye kaydetmeye çalışmasını engelliyoruz (Debounce)
   useEffect(() => {
+    const targetValue = value || "#000000";
+    if (localValue === targetValue) return;
+
     const timeoutId = setTimeout(() => {
-      if (localValue !== (value || "#000000")) {
-        onChange(localValue ? set(localValue) : unset());
-      }
+      onChange(localValue ? set(localValue) : unset());
     }, 200); // 200ms gecikme ile kaydeder
 
     return () => clearTimeout(timeoutId);

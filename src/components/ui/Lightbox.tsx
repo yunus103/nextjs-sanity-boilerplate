@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Expand, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { urlForImage } from "@/sanity/lib/image";
+import { SanityImage as SanityImageType } from "@/types";
 
 /**
  * Thumbnail'e hover edildiğinde tam boyutlu lightbox görselini önceden yükler.
  * Tarayıcı cache'e aldığı için tıklandığında anında açılır.
  */
-function prefetchLightboxImage(image: any) {
+function prefetchLightboxImage(image: SanityImageType) {
   if (typeof window === "undefined" || !image?.asset) return;
   try {
     const url = urlForImage(image)
@@ -32,12 +33,21 @@ function prefetchLightboxImage(image: any) {
 }
 
 interface LightboxGalleryProps {
-  images: any[];
+  images: SanityImageType[];
 }
 
 export function LightboxGallery({ images }: LightboxGalleryProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
+
+  const paginate = useCallback((newDirection: number) => {
+    setDirection(newDirection);
+    setSelectedImage((prev) => {
+      if (prev === null) return 0;
+      if (newDirection === 1) return prev < images.length - 1 ? prev + 1 : 0;
+      return prev > 0 ? prev - 1 : images.length - 1;
+    });
+  }, [images.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -48,16 +58,7 @@ export function LightboxGallery({ images }: LightboxGalleryProps) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage, images.length]);
-
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setSelectedImage((prev) => {
-      if (prev === null) return 0;
-      if (newDirection === 1) return prev < images.length - 1 ? prev + 1 : 0;
-      return prev > 0 ? prev - 1 : images.length - 1;
-    });
-  };
+  }, [selectedImage, paginate]);
 
   const variants = {
     enter: (direction: number) => ({

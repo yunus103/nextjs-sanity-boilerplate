@@ -80,7 +80,7 @@ Welcome, Agent. This document is your primary guide for understanding, maintaini
 ## 6. Core Rules for the Agent
 
 1. **NO Hardcoding**: Labels and content should come from Sanity. Theme settings should come from `siteSettings`.
-2. **TypeScript First**: Ensure all new components and data fetching have proper types.
+2. **TypeScript First**: Ensure all new components and data fetching have proper types. Use the global type definitions in `src/types/index.ts` (e.g., `SanityImage`, `BlogPost`, `SiteSettings`, `Navigation`) instead of `any`. Explicit `any` usage is blocked by strict ESLint rules (`no-explicit-any`).
 3. **Component Reusability**: Check `src/components/ui` before creating a new base component.
 4. **Draft Mode**: Support preview functionality by using `getClient(isDraft)` where applicable.
 5. **Clean GROQ**: Only fetch the fields you actually need to reduce payload size.

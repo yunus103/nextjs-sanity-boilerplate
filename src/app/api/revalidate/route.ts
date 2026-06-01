@@ -54,7 +54,6 @@ export async function POST(req: Request) {
 
     tags.forEach((tag) => {
       // Revalidate target tags using the user's exact parameters that worked previously
-      // @ts-ignore
       revalidateTag(tag, { expire: 0 });
       console.log(`Revalidated tag: ${tag}`);
     });
@@ -62,7 +61,6 @@ export async function POST(req: Request) {
     // For specific document updates based on slug
     if (_type && slug?.current) {
       const itemTag = `${_type}:${slug.current}`;
-      // @ts-ignore
       revalidateTag(itemTag, { expire: 0 });
       console.log(`Revalidated tag: ${itemTag}`);
     }
@@ -74,10 +72,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ revalidated: true, tags, now: Date.now() });
-  } catch (err: any) {
-    console.error("Revalidation error:", err.message);
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("Revalidation error:", error.message);
     return NextResponse.json(
-      { message: "Error revalidating", error: err.message },
+      { message: "Error revalidating", error: error.message },
       { status: 500 }
     );
   }

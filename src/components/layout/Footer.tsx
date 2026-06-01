@@ -11,6 +11,8 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { RiMailLine, RiPhoneLine, RiMapPinLine } from "react-icons/ri";
 
+import { SiteSettings, Navigation } from "@/types";
+
 type NavItem = {
   label: string;
   href: string;
@@ -37,7 +39,7 @@ function resolveHref(item: NavItem): string {
   return item.href || "#";
 }
 
-export function Footer({ settings, navigation }: { settings: any; navigation: any }) {
+export function Footer({ settings, navigation }: { settings: SiteSettings; navigation: Navigation }) {
   const footerLinks: NavItem[] = navigation?.footerLinks || [];
   const socialLinks: SocialLink[] = (settings?.socialLinks || []).filter((s: SocialLink) => s.url);
   const contact = settings?.contactInfo;

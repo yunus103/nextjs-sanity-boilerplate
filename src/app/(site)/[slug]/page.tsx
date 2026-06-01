@@ -13,11 +13,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { blogRelatedPostsQuery } from "@/sanity/lib/queries";
 
+import { BlogPost } from "@/types";
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const posts = await client.fetch(blogListQuery, {}, { next: { tags: ["blog"] } });
-  return (posts || []).map((post: any) => ({ slug: post.slug?.current }));
+  return (posts || []).map((post: BlogPost) => ({ slug: post.slug?.current }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -66,7 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
         <FadeIn direction="up">
           <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/blog" />}>
-            ← Blog'a Dön
+            {"← Blog'a Dön"}
           </Button>
 
           <div className="flex items-center gap-3 mb-4">
@@ -126,17 +128,19 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="mt-20 pt-10 border-t border-border">
               <h2 className="text-2xl font-bold mb-8 font-bankgothic">İlgili Yazılar</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {relatedPosts.map((rPost: any) => (
-                  <Link key={rPost.slug.current} href={`/${rPost.slug.current}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
+                {relatedPosts.map((rPost: BlogPost) => (
+                  <Link key={rPost.slug?.current} href={`/${rPost.slug?.current}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
                     <article className="overflow-hidden h-full flex flex-col">
-                      <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted">
-                        <SanityImage
-                          image={rPost.mainImage}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </div>
+                      {rPost.mainImage && (
+                        <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted">
+                          <SanityImage
+                            image={rPost.mainImage}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        </div>
+                      )}
                       <div className="flex-grow flex flex-col">
                         {rPost.publishedAt && (
                           <time className="text-xs text-muted-foreground mb-2 tracking-widest uppercase">

@@ -7,10 +7,11 @@ import { AnimateGroup } from "@/components/ui/AnimateGroup";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { formatDate } from "@/lib/utils";
+import { BlogPost, BlogCategory } from "@/types";
 
 interface BlogFilterProps {
-  posts: any[];
-  categories: any[];
+  posts: BlogPost[];
+  categories: BlogCategory[];
 }
 
 export function BlogFilter({ posts, categories }: BlogFilterProps) {
@@ -21,6 +22,7 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
     const urlParams = new URLSearchParams(window.location.search);
     const categoryQuery = urlParams.get("category");
     if (categoryQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentCategory(categoryQuery);
     }
   }, []);
@@ -49,12 +51,12 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
             >
               Tümü
             </Button>
-            {categories.map((cat: any) => (
+            {categories.map((cat: BlogCategory) => (
               <Button
                 key={cat._id}
                 variant={currentCategory === cat.slug?.current ? "default" : "outline"}
                 size="sm"
-                onClick={() => setCategory(cat.slug?.current)}
+                onClick={() => setCategory(cat.slug?.current || null)}
               >
                 {cat.title}
               </Button>
@@ -65,7 +67,7 @@ export function BlogFilter({ posts, categories }: BlogFilterProps) {
 
       {filteredPosts?.length > 0 ? (
         <AnimateGroup key={currentCategory || "all"} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post: any) => (
+          {filteredPosts.map((post: BlogPost) => (
             <Link key={post.slug?.current} href={`/${post.slug?.current}`} className="group block">
               <article className="border rounded-lg overflow-hidden bg-card hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
                 {post.mainImage && (

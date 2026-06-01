@@ -285,3 +285,30 @@ import { JsonLd, organizationJsonLd, articleJsonLd } from "@/components/seo/Json
 | `SMTP_USER` | ✅ | SMTP kullanıcı e-postası |
 | `SMTP_PASS` | ✅ | SMTP şifre/uygulama şifresi |
 | `CONTACT_FORM_TO` | ✅ | Form bildirimlerinin gideceği e-posta |
+
+---
+
+## 7. Tip Güvenliği & Ortak Modeller (TypeScript)
+
+Projedeki tüm Sanity veri modelleri ve bileşen parametreleri, tip güvenliği (type safety) ve IDE otomatik tamamlama (autocomplete) desteği sunmak amacıyla `src/types/index.ts` altında toplanmıştır.
+
+### Önemli Modeller:
+*   `SanityImage`: Sanity görsel alanları için (alt, asset, hotspot, crop)
+*   `BlogPost`: Blog gönderileri için
+*   `BlogCategory`: Blog kategorileri için
+*   `SiteSettings`: Global site ayarları için
+*   `Navigation` / `NavItem`: Menü ve navigasyon yapıları için
+
+### Kod İçinde Kullanımı:
+```typescript
+import { BlogPost, SiteSettings } from "@/types";
+
+export function CustomComponent({ post, settings }: { post: BlogPost; settings: SiteSettings }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{settings.siteName}</p>
+    </div>
+  );
+}
+```

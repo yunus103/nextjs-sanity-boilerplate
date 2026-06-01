@@ -2,18 +2,19 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { SanityImage as SanityImageType, CtaLink } from "@/types";
 
 interface HeroSectionProps {
   data: {
-    heroImage?: any;
+    heroImage?: SanityImageType;
     heroTitle?: string;
     heroSubtitle?: string;
     heroCtaLabel?: string;
-    heroCtaLink?: any;
+    heroCtaLink?: CtaLink;
   };
 }
 
-export function resolveLink(linkData: any) {
+export function resolveLink(linkData?: CtaLink) {
   if (!linkData) return "/";
   if (linkData.linkType === "manual") return linkData.manual || "/";
   

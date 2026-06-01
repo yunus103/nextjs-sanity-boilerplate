@@ -5,6 +5,7 @@ import { urlForImage, getImageLqip } from "@/sanity/lib/image";
 
 type SanityImageProps = {
   image: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     asset: any;
     alt?: string;
     hotspot?: { x: number; y: number };

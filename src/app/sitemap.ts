@@ -3,6 +3,8 @@ import { client } from "@/sanity/lib/client";
 import { allSlugsForSitemapQuery } from "@/sanity/lib/queries";
 import { getSiteUrl } from "@/lib/utils";
 
+import { BlogPost, Service, Project } from "@/types";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
   const data = await client.fetch(allSlugsForSitemapQuery);
@@ -15,22 +17,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const dynamicRoutes: MetadataRoute.Sitemap = [
-    ...(data?.blogPosts?.map((p: any) => ({
+    ...(data?.blogPosts?.map((p: BlogPost) => ({
       url: `${base}/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
+      lastModified: new Date(p._updatedAt || new Date()),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),
 
-    ...(data?.services?.map((p: any) => ({
+    ...(data?.services?.map((p: Service) => ({
       url: `${base}/hizmetler/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
+      lastModified: new Date(p._updatedAt || new Date()),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })) || []),
-    ...(data?.projects?.map((p: any) => ({
+    ...(data?.projects?.map((p: Project) => ({
       url: `${base}/projeler/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
+      lastModified: new Date(p._updatedAt || new Date()),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),

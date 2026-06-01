@@ -10,26 +10,24 @@ import { Button } from "@/components/ui/button";
 import { RiMenu3Line, RiCloseLine, RiArrowDownSLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 
-type NavItem = {
-  label: string;
-  href: string;
-  openInNewTab?: boolean;
-  subLinks?: NavItem[];
-};
+import { SiteSettings, Navigation, NavItem } from "@/types";
 
 function resolveHref(item: NavItem): string {
   return item.href || "#";
 }
 
-export function Header({ settings, navigation }: { settings: any; navigation: any }) {
+export function Header({ settings, navigation }: { settings: SiteSettings; navigation: Navigation }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const links: NavItem[] = navigation?.headerLinks || [];
 
   // Sayfa değiştiğinde menüyü kapat
   useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
+    if (menuOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setMenuOpen(false);
+    }
+  }, [pathname, menuOpen, setMenuOpen]);
 
   const isActive = (item: NavItem) => {
     const href = resolveHref(item);

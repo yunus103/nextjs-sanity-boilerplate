@@ -10,11 +10,13 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+import { Project } from "@/types";
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const projects = await client.fetch(projectListQuery, {}, { next: { tags: ["projects"] } });
-  return (projects || []).map((p: any) => ({ slug: p.slug?.current }));
+  return (projects || []).map((p: Project) => ({ slug: p.slug?.current }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
