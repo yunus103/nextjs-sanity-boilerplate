@@ -130,17 +130,9 @@ export function Footer({ settings, navigation }: { settings: any; navigation: an
 
         {/* Alt Bar */}
         <div className="mt-12 border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground w-full text-center sm:text-left">
             © {currentYear} {settings?.siteName}. Tüm hakları saklıdır.
           </p>
-          <div className="flex gap-4">
-            <Link href="/yasal/gizlilik-politikasi" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Gizlilik Politikası
-            </Link>
-            <Link href="/yasal/kullanim-kosullari" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Kullanım Koşulları
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

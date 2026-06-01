@@ -47,7 +47,6 @@ export async function POST(req: Request) {
       blogPost: ["blog"],
       service: ["services"],
       project: ["projects"],
-      legalPage: ["legal"],
       faq: ["faq"],
     };
 

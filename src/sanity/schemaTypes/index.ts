@@ -13,7 +13,6 @@ import { blogPostType } from "./documents/blogPost";
 import { blogCategoryType } from "./documents/blogCategory";
 import { serviceType } from "./documents/service";
 import { projectType } from "./documents/project";
-import { legalPageType } from "./documents/legalPage";
 import { faqType } from "./documents/faq";
 
 export const schemaTypes = [
@@ -35,7 +34,6 @@ export const schemaTypes = [
   blogCategoryType,
   serviceType,
   projectType,
-  legalPageType,
   faqType,
 ];
 

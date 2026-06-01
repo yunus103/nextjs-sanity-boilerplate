@@ -43,7 +43,6 @@ export const homePageType = defineType({
             { type: "blogPost" },
             { type: "aboutPage" },
             { type: "contactPage" },
-            { type: "legalPage" },
           ],
           hidden: ({ parent }) => parent?.linkType !== "internal",
         }),

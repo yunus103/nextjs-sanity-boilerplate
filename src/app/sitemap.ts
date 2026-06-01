@@ -34,12 +34,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })) || []),
-    ...(data?.legalPages?.map((p: any) => ({
-      url: `${base}/yasal/${p.slug}`,
-      lastModified: new Date(p._updatedAt),
-      changeFrequency: "yearly" as const,
-      priority: 0.3,
-    })) || []),
   ];
 
   return [...staticRoutes, ...dynamicRoutes];

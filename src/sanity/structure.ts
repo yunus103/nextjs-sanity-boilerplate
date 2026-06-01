@@ -38,5 +38,4 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("blogPost").title("📝 Blog Yazıları"),
       S.documentTypeListItem("service").title("🛠 Hizmetler"),
       S.documentTypeListItem("project").title("💼 Projeler"),
-      S.documentTypeListItem("legalPage").title("⚖️ Yasal Sayfalar"),
     ]);
