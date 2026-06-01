@@ -65,18 +65,7 @@ Tarayıcıda:
    - Secret: Sanity Dashboard'daki Secret alanına `.env.local`'daki `SANITY_WEBHOOK_SECRET` değerini girin. (Header olarak değil, direkt dashboard'daki Secret kutusuna)
 3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini güncelleyin. Uygulama `@sanity/webhook` paketi ile imzayı otomatik doğrular.
 
-### 4. Draft Mode Kurulumu
-
-`SANITY_PREVIEW_SECRET` değerini rastgele bir şifre ile güncelle:
-
-```bash
-# Güvenli bir şifre üretmek için (opsiyonel)
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-Draft mode'u aktifleştirmek için: `/api/draft/enable?secret=SECRET&redirect=/`
-
-### 5. Gmail SMTP Kurulumu (İletişim Formu)
+### 4. Gmail SMTP Kurulumu (İletişim Formu)
 
 1. Google Hesabı → **Güvenlik** → **2 Adımlı Doğrulama** → etkinleştir
 2. **Uygulama Şifreleri** → Uygulama: Mail → Şifreyi kopyala

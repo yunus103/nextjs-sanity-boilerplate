@@ -107,40 +107,7 @@ Webhook'ta `_type` alanı gönderilir, `tagMap` üzerinden ilgili tag bulunur ve
 
 ---
 
-## 4. Draft Mode Kullanımı
 
-### Aktifleştirme
-
-Tarayıcıda şu URL'yi aç:
-
-```
-http://localhost:3000/api/draft/enable?secret=SANITY_PREVIEW_SECRET&redirect=/
-```
-
-- `.env.local`'daki `SANITY_PREVIEW_SECRET` değerini `secret` parametresine yaz
-- `redirect` parametresi değiştirilerek direkt bir sayfaya yönlendirilebilir (örn: `/blog/ilk-yazi`)
-- Aktif olduğunda sarı bir banner görünür
-
-### Devre Dışı Bırakma
-
-```
-http://localhost:3000/api/draft/disable
-```
-
-### Kod İçinde Kullanım
-
-```typescript
-import { draftMode } from "next/headers";
-import { getClient } from "@/sanity/lib/client";
-
-const isDraft = (await draftMode()).isEnabled;
-const data = await getClient(isDraft).fetch(query, params, { next: { tags: [...] } });
-```
-
-`getClient(true)` → `previewClient` (token'lı, `perspective: "previewDrafts"`)
-`getClient(false)` → `client` (CDN'li, production)
-
----
 
 ## 5. Component Kullanım Örnekleri
 
@@ -300,9 +267,7 @@ Arama motorlarının Sıkça Sorulan Sorular cevaplarını okuyabilmesi için, a
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | ✅ | Sanity proje ID |
 | `NEXT_PUBLIC_SANITY_DATASET` | ✅ | Genellikle `production` |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | Canonical URL base, sitemap, OG |
-| `SANITY_API_READ_TOKEN` | ✅ | Draft mode ve preview için |
 | `SANITY_WEBHOOK_SECRET` | ✅ | ISR revalidation güvenliği |
-| `SANITY_PREVIEW_SECRET` | ✅ | Draft mode URL güvenliği |
 | `SMTP_HOST` | ✅ | Mail sunucusu (örn: `smtp.gmail.com`) |
 | `SMTP_PORT` | ✅ | Mail port (Gmail: `587`) |
 | `SMTP_USER` | ✅ | SMTP kullanıcı e-postası |

@@ -3,9 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    SANITY_API_READ_TOKEN: z.string().min(1),
     SANITY_WEBHOOK_SECRET: z.string().min(1),
-    SANITY_PREVIEW_SECRET: z.string().min(1),
     SMTP_HOST: z.string().min(1),
     SMTP_PORT: z.string().min(1),
     SMTP_USER: z.string().email(),
@@ -18,9 +16,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: z.string().url(),
   },
   runtimeEnv: {
-    SANITY_API_READ_TOKEN: process.env.SANITY_API_READ_TOKEN,
     SANITY_WEBHOOK_SECRET: process.env.SANITY_WEBHOOK_SECRET,
-    SANITY_PREVIEW_SECRET: process.env.SANITY_PREVIEW_SECRET,
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: process.env.SMTP_PORT,
     SMTP_USER: process.env.SMTP_USER,

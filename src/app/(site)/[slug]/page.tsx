@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
-import { getClient, client } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { blogPostBySlugQuery, blogListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
@@ -24,7 +23,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getClient().fetch(blogPostBySlugQuery, { slug }, { next: { tags: ["blog"] } });
+  const post = await client.fetch(blogPostBySlugQuery, { slug }, { next: { tags: ["blog"] } });
   if (!post) return {};
   
   const baseSeo = await buildMetadata({
@@ -43,8 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const isDraft = (await draftMode()).isEnabled;
-  const post = await getClient(isDraft).fetch(
+  const post = await client.fetch(
     blogPostBySlugQuery,
     { slug },
     { next: { tags: ["blog"] } }
@@ -54,7 +52,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   let relatedPosts = [];
   if (post.category?._id) {
-    relatedPosts = await getClient(isDraft).fetch(
+    relatedPosts = await client.fetch(
       blogRelatedPostsQuery,
       { categoryId: post.category._id, currentPostId: post._id },
       { next: { tags: ["blog"] } }

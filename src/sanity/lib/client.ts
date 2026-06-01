@@ -7,14 +7,3 @@ const config = {
 };
 
 export const client = createClient({ ...config, useCdn: true });
-
-export const previewClient = createClient({
-  ...config,
-  useCdn: false,
-  token: process.env.SANITY_API_READ_TOKEN,
-  perspective: "previewDrafts",
-});
-
-export function getClient(preview = false) {
-  return preview ? previewClient : client;
-}

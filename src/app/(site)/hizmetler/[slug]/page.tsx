@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
-import { getClient, client } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { serviceBySlugQuery, serviceListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const service = await getClient().fetch(serviceBySlugQuery, { slug }, { next: { tags: ["services"] } });
+  const service = await client.fetch(serviceBySlugQuery, { slug }, { next: { tags: ["services"] } });
   if (!service) return {};
   return buildMetadata({
     title: service.title,
@@ -33,8 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
-  const isDraft = (await draftMode()).isEnabled;
-  const service = await getClient(isDraft).fetch(
+  const service = await client.fetch(
     serviceBySlugQuery,
     { slug },
     { next: { tags: ["services"] } }

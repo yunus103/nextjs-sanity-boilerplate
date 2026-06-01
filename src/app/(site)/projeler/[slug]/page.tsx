@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
-import { getClient, client } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { projectBySlugQuery, projectListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
@@ -22,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getClient().fetch(projectBySlugQuery, { slug }, { next: { tags: ["projects"] } });
+  const project = await client.fetch(projectBySlugQuery, { slug }, { next: { tags: ["projects"] } });
   if (!project) return {};
   return buildMetadata({
     title: project.title,
@@ -33,8 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const isDraft = (await draftMode()).isEnabled;
-  const project = await getClient(isDraft).fetch(
+  const project = await client.fetch(
     projectBySlugQuery,
     { slug },
     { next: { tags: ["projects"] } }

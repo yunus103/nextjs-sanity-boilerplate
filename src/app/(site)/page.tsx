@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import { draftMode } from "next/headers";
-import { getClient, client } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import {
   homePageQuery,
   serviceListQuery,
@@ -16,7 +15,7 @@ import { BlogSection } from "@/components/home/BlogSection";
 import { HomePage as HomePageType, Service, Project, BlogPost } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getClient().fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
+  const data = await client.fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
   return buildMetadata({
     canonicalPath: "/",
     pageSeo: data?.seo,
@@ -24,11 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const isDraft = (await draftMode()).isEnabled;
-  
   // Fetch home page data and fallbacks in parallel
   const [data, fallbackServices, fallbackProjects, fallbackPosts] = await Promise.all([
-    getClient(isDraft).fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } }),
+    client.fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } }),
     client.fetch<Service[]>(serviceListQuery, {}, { next: { tags: ["services"] } }),
     client.fetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } }),
     client.fetch<BlogPost[]>(blogListQuery, {}, { next: { tags: ["blog"] } }),
