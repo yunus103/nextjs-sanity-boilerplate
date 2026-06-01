@@ -90,7 +90,7 @@ const components: PortableTextComponents = {
 export function RichText({ value, className = "" }: { value: any[]; className?: string }) {
   if (!value) return null;
   return (
-    <div className={`prose prose-lg max-w-none dark:prose-invert break-words flow-root ${className}`}>
+    <div className={`prose prose-lg max-w-none break-words flow-root ${className}`}>
       <PortableText value={value} components={components} />
     </div>
   );

@@ -201,7 +201,7 @@ import { RichText } from "@/components/ui/RichText";
 <RichText value={post.body} className="mt-8" />
 ```
 
-`prose prose-lg dark:prose-invert` sınıfları otomatik uygulanır. İnline görseller `alignment` ve `size` alanlarına göre yerleşir.
+`prose prose-lg` sınıfları otomatik uygulanır. İnline görseller `alignment` ve `size` alanlarına göre yerleşir.
 
 ### `FadeIn`
 

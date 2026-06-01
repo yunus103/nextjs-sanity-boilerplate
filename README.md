@@ -12,7 +12,6 @@ Modern ajanslar için hazır, production-grade Next.js 15 + Sanity v3 boilerplat
 | Sanity | v3 | Headless CMS |
 | Framer Motion | latest | Animasyonlar |
 | react-icons | latest | SVG ikon kütüphanesi |
-| next-themes | latest | Dark/Light mod |
 | Nodemailer | latest | İletişim formu e-postası |
 | Zod + @t3-oss/env-nextjs | latest | Type-safe env validasyonu |
 
@@ -90,7 +89,7 @@ Draft mode'u aktifleştirmek için: `/api/draft/enable?secret=SECRET&redirect=/`
 - [ ] `package.json` içinde `"name"` alanını güncelle
 - [ ] `.env.local` içindeki tüm `your-*` placeholder değerlerini gerçek değerlerle değiştir
 - [ ] `src/app/layout.tsx` içindeki `"Site Adı"` metnini güncelle
-- [ ] `src/app/globals.css` içindeki `:root` ve `.dark` bloklarından marka renklerini güncelle
+- [ ] `src/app/globals.css` içindeki `:root` bloğundan marka renklerini güncelle
 - [ ] Sanity Studio'yu aç (`/studio`), **Site Ayarları** (Logo, Favicon) ve **Navigasyon** dokümanlarını doldur
 - [ ] Vercel'e deploy et, tüm `.env.local` env değişkenlerini Vercel paneline ekle
 - [ ] Sanity Dashboard → Webhooks: `https://siteadi.com/api/revalidate` ekle

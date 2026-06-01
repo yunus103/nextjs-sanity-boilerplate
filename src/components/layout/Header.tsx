@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SanityImage } from "@/components/ui/SanityImage";
-import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { RiMenu3Line, RiCloseLine, RiArrowDownSLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
@@ -41,24 +40,14 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
         <Link href="/" className="flex items-center group h-full">
           <div className="relative flex items-center justify-start transition-all duration-200 group-hover:scale-[1.02] active:scale-95 h-full py-4 max-w-[250px] md:max-w-[450px]">
             {settings?.logo ? (
-              <>
-                <SanityImage
-                  image={settings.logo}
-                  width={800}
-                  height={200}
-                  fit="max"
-                  className="h-full w-auto object-contain object-left dark:hidden"
-                  priority
-                />
-                <SanityImage
-                  image={settings.logo}
-                  width={800}
-                  height={200}
-                  fit="max"
-                  className="h-full w-auto object-contain object-left hidden dark:block grayscale invert opacity-90"
-                  priority
-                />
-              </>
+              <SanityImage
+                image={settings.logo}
+                width={800}
+                height={200}
+                fit="max"
+                className="h-full w-auto object-contain object-left"
+                priority
+              />
             ) : (
               <span className="font-bold text-xl tracking-tight leading-none">{settings?.siteName}</span>
             )}
@@ -70,12 +59,10 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
           {links.map((item, i) => (
             <DesktopNavItem key={i} item={item} active={isActive(item)} />
           ))}
-          <ThemeToggle />
         </nav>
 
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menüyü aç/kapat">
             {menuOpen ? <RiCloseLine size={20} /> : <RiMenu3Line size={20} />}
           </Button>
