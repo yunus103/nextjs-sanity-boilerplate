@@ -28,28 +28,57 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
     internal->{ _type, "slug": slug.current }
   },
   heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  aboutTitle, aboutSubtitle, aboutText,
+  aboutImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  aboutCtaLabel, aboutCtaLink,
+  servicesTitle, servicesSubtitle,
+  featuredServices[]-> {
+    title, slug,
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+  },
+  projectsTitle, projectsSubtitle,
+  featuredProjects[]-> {
+    title, slug,
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+  },
+  blogTitle, blogSubtitle,
+  featuredPosts[]-> {
+    title, slug, excerpt, publishedAt,
+    category->{ title, slug },
+    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+  },
   seo
 }`;
 
 export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, body,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   seo
 }`;
 
 export const contactPageQuery = groq`*[_type == "contactPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, formTitle, successMessage, seo
 }`;
 
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
 export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
 export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
+  heroTitle, heroSubtitle,
+  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 

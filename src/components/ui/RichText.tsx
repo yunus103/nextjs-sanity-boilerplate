@@ -87,7 +87,7 @@ const components: PortableTextComponents = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function RichText({ value, className = "" }: { value: any[]; className?: string }) {
+export function RichText({ value, className = "" }: { value?: any[]; className?: string }) {
   if (!value) return null;
   return (
     <div className={`prose prose-lg max-w-none break-words flow-root ${className}`}>

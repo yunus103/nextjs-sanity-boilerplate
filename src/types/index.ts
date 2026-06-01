@@ -114,3 +114,68 @@ export interface CtaLink {
     slug?: string;
   };
 }
+
+export interface SeoSettings {
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string[];
+  shareTitle?: string;
+  shareDescription?: string;
+  shareGraphic?: SanityImage;
+}
+
+export interface BasePage {
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroImage?: SanityImage;
+  seo?: SeoSettings;
+}
+
+export interface AboutPage extends BasePage {
+  pageTitle: string;
+  pageSubtitle?: string;
+  body?: any[];
+  mainImage?: SanityImage;
+}
+
+export interface ContactPage extends BasePage {
+  pageTitle: string;
+  pageSubtitle?: string;
+  formTitle?: string;
+  successMessage?: string;
+}
+
+export interface InnerPageWithCta extends BasePage {
+  pageTitle: string;
+  pageSubtitle?: string;
+  ctaLabel?: string;
+  ctaLink?: string;
+}
+
+export type BlogPage = InnerPageWithCta;
+export type ServicesPage = InnerPageWithCta;
+export type ProjectsPage = InnerPageWithCta;
+
+export interface HomePage {
+  heroTitle: string;
+  heroSubtitle?: string;
+  heroImage?: SanityImage;
+  heroCtaLabel?: string;
+  heroCtaLink?: CtaLink;
+  aboutTitle?: string;
+  aboutSubtitle?: string;
+  aboutText?: any[];
+  aboutImage?: SanityImage;
+  aboutCtaLabel?: string;
+  aboutCtaLink?: string;
+  servicesTitle?: string;
+  servicesSubtitle?: string;
+  featuredServices?: Service[];
+  projectsTitle?: string;
+  projectsSubtitle?: string;
+  featuredProjects?: Project[];
+  blogTitle?: string;
+  blogSubtitle?: string;
+  featuredPosts?: BlogPost[];
+  seo?: SeoSettings;
+}
