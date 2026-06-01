@@ -43,6 +43,33 @@ export const blogPostType = defineType({
           marks: {
             annotations: [
               {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  {
+                    name: "href",
+                    type: "string",
+                    title: "URL / Bağlantı Yolu",
+                    validation: (Rule) =>
+                      Rule.custom((value) => {
+                        const strVal = value as string;
+                        if (!strVal) return true;
+                        // Relative path, anchor, mailto/tel, or absolute URL validation
+                        const isRelative = strVal.startsWith("/");
+                        const isMailtoOrTel = strVal.startsWith("mailto:") || strVal.startsWith("tel:");
+                        const isAnchor = strVal.startsWith("#");
+                        const isAbsolute = /^(https?:\/\/)/.test(strVal);
+                        
+                        if (isRelative || isMailtoOrTel || isAnchor || isAbsolute) {
+                          return true;
+                        }
+                        return "Geçerli bir URL veya bağıntılı yol girin (örn: https://example.com veya /hizmetler)";
+                      }),
+                  },
+                ],
+              },
+              {
                 name: "textColor",
                 type: "object",
                 title: "Metin Rengi",
