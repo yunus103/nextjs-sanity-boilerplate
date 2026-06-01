@@ -7,6 +7,7 @@ import { client } from "@/sanity/lib/client";
 import { layoutQuery } from "@/sanity/lib/queries";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/seo/JsonLd";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={inter.className}>
+        {/* Sayfa geçişlerinde üstte ince ilerleme çubuğu — marka rengi kullanır */}
+        <NextTopLoader
+          color="var(--primary)"
+          height={3}
+          showSpinner={false}
+          shadow={false}
+          speed={200}
+          crawlSpeed={200}
+        />
         {settings?.gtmId && <GoogleTagManager gtmId={settings.gtmId} />}
         {settings?.gaId && <GoogleAnalytics gaId={settings.gaId} />}
         <JsonLd data={organizationJsonLd(settings)} />
