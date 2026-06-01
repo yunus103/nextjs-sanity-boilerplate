@@ -4,6 +4,8 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./src/sanity/schemaTypes";
 import { structure } from "./src/sanity/structure";
 import { singletonPlugin } from "./src/sanity/plugins/singletonPlugin";
+import { media } from "sanity-plugin-media";
+import { trTRLocale } from "@sanity/locale-tr-tr";
 
 const SINGLETONS = ["siteSettings", "navigation", "homePage", "aboutPage", "contactPage", "blogPage", "servicesPage", "projectsPage"];
 
@@ -17,5 +19,7 @@ export default defineConfig({
     structureTool({ structure }),
     visionTool({ defaultApiVersion: "2024-01-01" }),
     singletonPlugin(SINGLETONS),
+    media(),
+    trTRLocale(),
   ],
 });
