@@ -99,7 +99,6 @@ src/
 │   │   ├── iletisim/     # İletişim sayfası
 │   ├── api/              # API route'ları
 │   │   ├── revalidate/   # ISR webhook
-│   │   ├── draft/        # Draft mode enable/disable
 │   │   └── contact/      # İletişim formu
 │   ├── studio/           # Sanity Studio (embedded)
 │   ├── layout.tsx        # Root layout
