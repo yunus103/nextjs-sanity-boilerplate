@@ -21,6 +21,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={inter.className}>
+        <noscript>
+          <style>{`[data-fade-in]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         {/* Sayfa geçişlerinde üstte ince ilerleme çubuğu — marka rengi kullanır */}
         <NextTopLoader
           color="var(--primary)"

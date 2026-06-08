@@ -34,6 +34,7 @@ export function FadeIn({
 
   return (
     <motion.div
+      data-fade-in
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
