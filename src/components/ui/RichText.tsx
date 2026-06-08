@@ -1,14 +1,14 @@
 import { PortableText, PortableTextComponents } from "@portabletext/react";
-import Image from "next/image";
 import Link from "next/link";
-import { urlForImage, getImageLqip } from "@/sanity/lib/image";
+import { SanityImage } from "@/components/ui/SanityImage";
 
 const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null;
-      const imageUrl = urlForImage(value)?.auto("format").url();
-      const blurDataURL = getImageLqip(value);
+      const dimensions = value.asset.metadata?.dimensions;
+      const width = dimensions?.width || 1200;
+      const height = dimensions?.height || 800;
 
       const sizeMap: Record<string, string> = {
         "25": "w-full md:w-1/4",
@@ -38,14 +38,12 @@ const components: PortableTextComponents = {
 
       return (
         <figure className={containerClasses.trim()}>
-          <Image
-            src={imageUrl || ""}
-            alt={value.alt || ""}
-            width={1200}
-            height={800}
+          <SanityImage
+            image={value}
+            width={width}
+            height={height}
+            fit="max"
             className="w-full h-auto rounded-lg shadow-md"
-            placeholder={blurDataURL ? "blur" : "empty"}
-            blurDataURL={blurDataURL}
           />
           {value.caption && (
             <figcaption className="mt-2 text-sm text-center text-muted-foreground italic">
