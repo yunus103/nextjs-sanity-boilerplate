@@ -29,14 +29,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await client.fetch<SitemapData>(allSlugsForSitemapQuery);
   const pages = data?.pages;
 
-  const staticRoutes: MetadataRoute.Sitemap = [
+  const staticRouteEntries: MetadataRoute.Sitemap = [
     { url: base, lastModified: lastModified(pages?.home?._updatedAt), changeFrequency: "weekly", priority: 1 },
     { url: `${base}/hakkimizda`, lastModified: lastModified(pages?.about?._updatedAt), changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/iletisim`, lastModified: lastModified(pages?.contact?._updatedAt), changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/blog`, lastModified: lastModified(pages?.blog?._updatedAt), changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/hizmetler`, lastModified: lastModified(pages?.services?._updatedAt), changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/projeler`, lastModified: lastModified(pages?.projects?._updatedAt), changeFrequency: "monthly", priority: 0.8 },
-  ].filter((route) => {
+  ];
+
+  const staticRoutes = staticRouteEntries.filter((route) => {
     const path = route.url.replace(base, "") || "/";
     if (path === "/") return !pages?.home?.noIndex;
     if (path === "/hakkimizda") return !pages?.about?.noIndex;
