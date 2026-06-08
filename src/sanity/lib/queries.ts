@@ -153,10 +153,17 @@ export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $
 // ─── Sitemap ───────────────────────────────────────────────────────────────────
 
 export const allSlugsForSitemapQuery = groq`{
-  "blogPosts": *[_type == "blogPost" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "blogCategories": *[_type == "blogCategory" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "services": *[_type == "service" && defined(slug.current)] { "slug": slug.current, _updatedAt },
-  "projects": *[_type == "project" && defined(slug.current)] { "slug": slug.current, _updatedAt }
+  "pages": {
+    "home": *[_type == "homePage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "about": *[_type == "aboutPage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "contact": *[_type == "contactPage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "blog": *[_type == "blogPage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "services": *[_type == "servicesPage"][0] { _updatedAt, "noIndex": seo.noIndex },
+    "projects": *[_type == "projectsPage"][0] { _updatedAt, "noIndex": seo.noIndex }
+  },
+  "blogPosts": *[_type == "blogPost" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt },
+  "services": *[_type == "service" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt },
+  "projects": *[_type == "project" && defined(slug.current) && !(seo.noIndex == true)] { "slug": slug.current, _updatedAt }
 }`;
 
 // ─── Varsayılan SEO ────────────────────────────────────────────────────────────
