@@ -22,6 +22,29 @@ type BuildMetadataParams = {
   pageSeo?: PageSeo;
 };
 
+type PortableTextChild = {
+  text?: string;
+};
+
+type PortableTextBlock = {
+  _type?: string;
+  children?: PortableTextChild[];
+};
+
+export function portableTextToPlainText(value?: PortableTextBlock[], maxLength = 160): string | undefined {
+  if (!value?.length) return undefined;
+
+  const text = value
+    .filter((block) => block?._type === "block")
+    .flatMap((block) => block.children?.map((child) => child.text).filter(Boolean) || [])
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) return undefined;
+  return text.length > maxLength ? `${text.slice(0, maxLength - 3).trimEnd()}...` : text;
+}
+
 export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
   const defaults = await client.fetch(defaultSeoQuery, {}, { next: { tags: ["layout"] } });
 

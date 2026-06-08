@@ -35,14 +35,36 @@ export function websiteJsonLd(settings?: SiteSettings) {
   };
 }
 
-export function articleJsonLd(post?: BlogPost) {
+export function articleJsonLd(post?: BlogPost, settings?: SiteSettings) {
+  const url = `${getSiteUrl()}/${post?.slug?.current}`;
+  const publisherName = settings?.siteName || "Site Adı";
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post?.title,
     datePublished: post?.publishedAt,
-    url: `${getSiteUrl()}/${post?.slug?.current}`,
+    dateModified: post?._updatedAt || post?.publishedAt,
+    url,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
+    },
     ...(post?.mainImage?.asset?.url && { image: [post.mainImage.asset.url] }),
+    author: {
+      "@type": "Organization",
+      name: publisherName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: publisherName,
+      ...(settings?.logo?.asset?.url && {
+        logo: {
+          "@type": "ImageObject",
+          url: settings.logo.asset.url,
+        },
+      }),
+    },
     description: post?.excerpt,
   };
 }

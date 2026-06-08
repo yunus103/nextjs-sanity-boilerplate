@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
-import { blogPostBySlugQuery, blogListQuery } from "@/sanity/lib/queries";
+import { blogPostBySlugQuery, blogListQuery, layoutQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
@@ -42,11 +42,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await client.fetch(
-    blogPostBySlugQuery,
-    { slug },
-    { next: { tags: ["blog"] } }
-  );
+  const [post, layoutData] = await Promise.all([
+    client.fetch(
+      blogPostBySlugQuery,
+      { slug },
+      { next: { tags: ["blog"] } }
+    ),
+    client.fetch(layoutQuery, {}, { next: { tags: ["layout"] } }),
+  ]);
 
   if (!post) notFound();
 
@@ -61,7 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={articleJsonLd(post)} />
+      <JsonLd data={articleJsonLd(post, layoutData?.settings)} />
 
       <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
         <FadeIn direction="up">
