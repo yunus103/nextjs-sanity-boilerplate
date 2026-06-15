@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client, cachedFetch } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { blogPostBySlugQuery, blogSlugsQuery } from "@/sanity/lib/queries";
 import { buildMetadata, getLayoutData } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: Props) {
     relatedPosts = await cachedFetch<BlogPost[]>(
       blogRelatedPostsQuery,
       { categoryId: post.category._id, currentPostId: post._id },
-      { next: { tags: [`blogPost:${slug}`] } }
+      { next: { tags: ["blog"] } }
     );
   }
 
