@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import { cachedFetch } from "@/sanity/lib/client";
+import { cache } from "react";
+import { client, cachedFetch } from "@/sanity/lib/client";
 import { servicesPageQuery, serviceListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/layout/PageHero";
@@ -10,8 +11,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ServicesPage as ServicesPageType, Service } from "@/types";
 
+const getServicesPageData = cache(
+  (): Promise<ServicesPageType> =>
+    client.fetch<ServicesPageType>(servicesPageQuery, {}, { next: { tags: ["servicesPage"] } })
+);
+
 export async function generateMetadata(): Promise<Metadata> {
-  const pageData = await cachedFetch<ServicesPageType>(servicesPageQuery, {}, { next: { tags: ["servicesPage"] } });
+  const pageData = await getServicesPageData();
   return buildMetadata({
     title: pageData?.heroTitle || pageData?.pageTitle || "Hizmetlerimiz",
     canonicalPath: "/hizmetler",
@@ -22,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ServicesHubPage() {
   const [services, pageData] = await Promise.all([
     cachedFetch<Service[]>(serviceListQuery, {}, { next: { tags: ["services"] } }),
-    cachedFetch<ServicesPageType>(servicesPageQuery, {}, { next: { tags: ["servicesPage"] } }),
+    getServicesPageData(),
   ]);
 
   return (
