@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import { cachedFetch } from "@/sanity/lib/client";
+import { cache } from "react";
+import { client } from "@/sanity/lib/client";
 import { layoutQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
@@ -50,9 +51,10 @@ export interface LayoutData {
   navigation: Navigation;
 }
 
-export function getLayoutData(): Promise<LayoutData> {
-  return cachedFetch<LayoutData>(layoutQuery, {}, { next: { tags: ["layout"] } });
-}
+export const getLayoutData = cache(
+  (): Promise<LayoutData> =>
+    client.fetch<LayoutData>(layoutQuery, {}, { next: { tags: ["layout"] } })
+);
 
 export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
   const { settings } = await getLayoutData();
