@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client, cachedFetch } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { serviceBySlugQuery, serviceSlugsQuery } from "@/sanity/lib/queries";
 import { buildMetadata, portableTextToPlainText } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
