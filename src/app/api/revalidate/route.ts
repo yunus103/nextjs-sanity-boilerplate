@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag, revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function POST(req: Request) {
   try {
@@ -53,9 +53,10 @@ export async function POST(req: Request) {
       blogPage: ["blogPage"],
       servicesPage: ["servicesPage"],
       projectsPage: ["projectsPage"],
-      blogPost: ["blog"],
-      service: ["services"],
-      project: ["projects"],
+      blogPost: ["blog", "sitemap"],
+      service: ["services", "sitemap"],
+      project: ["projects", "sitemap"],
+      blogCategory: ["blog"],
       faq: ["faq"],
     };
 
@@ -72,12 +73,6 @@ export async function POST(req: Request) {
       const itemTag = `${_type}:${slug.current}`;
       revalidateTag(itemTag, { expire: 0 });
       console.log(`Revalidated tag: ${itemTag}`);
-    }
-
-    // For layout-level data (navbar, footer, site settings) also revalidate the entire layout path
-    if (_type === "siteSettings" || _type === "navigation") {
-      revalidatePath("/", "layout");
-      console.log("Revalidated path: / (layout)");
     }
 
     return NextResponse.json({ revalidated: true, tags, now: Date.now() });
