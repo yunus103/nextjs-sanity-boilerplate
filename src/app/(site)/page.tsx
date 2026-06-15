@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import {
   homePageQuery,
   serviceListQuery,
@@ -15,7 +15,7 @@ import { BlogSection } from "@/components/home/BlogSection";
 import { HomePage as HomePageType, Service, Project, BlogPost } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
+  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
   return buildMetadata({
     canonicalPath: "/",
     pageSeo: data?.seo,
@@ -23,12 +23,25 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  // Fetch home page data and fallbacks in parallel
-  const [data, fallbackServices, fallbackProjects, fallbackPosts] = await Promise.all([
-    client.fetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } }),
-    client.fetch<Service[]>(serviceListQuery, {}, { next: { tags: ["services"] } }),
-    client.fetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } }),
-    client.fetch<BlogPost[]>(blogListQuery, {}, { next: { tags: ["blog"] } }),
+  // 1. First fetch the main homepage configuration
+  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
+
+  // 2. Determine if fallback queries are actually needed
+  const needsFallbackServices = !data?.featuredServices || data.featuredServices.length === 0;
+  const needsFallbackProjects = !data?.featuredProjects || data.featuredProjects.length === 0;
+  const needsFallbackPosts = !data?.featuredPosts || data.featuredPosts.length === 0;
+
+  // 3. Fetch fallbacks in parallel only if necessary
+  const [fallbackServices, fallbackProjects, fallbackPosts] = await Promise.all([
+    needsFallbackServices
+      ? cachedFetch<Service[]>(serviceListQuery, {}, { next: { tags: ["services"] } })
+      : Promise.resolve([]),
+    needsFallbackProjects
+      ? cachedFetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } })
+      : Promise.resolve([]),
+    needsFallbackPosts
+      ? cachedFetch<BlogPost[]>(blogListQuery, {}, { next: { tags: ["blog"] } })
+      : Promise.resolve([]),
   ]);
 
   // Determine which items to display (Sanity references or dynamic fallbacks)

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { projectsPageQuery, projectListQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { PageHero } from "@/components/layout/PageHero";
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { ProjectsPage as ProjectsPageType, Project } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pageData = await client.fetch<ProjectsPageType>(projectsPageQuery, {}, { next: { tags: ["projectsPage"] } });
+  const pageData = await cachedFetch<ProjectsPageType>(projectsPageQuery, {}, { next: { tags: ["projectsPage"] } });
   return buildMetadata({
     title: pageData?.heroTitle || pageData?.pageTitle || "Projelerimiz",
     canonicalPath: "/projeler",
@@ -21,8 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ProjectsHubPage() {
   const [projects, pageData] = await Promise.all([
-    client.fetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } }),
-    client.fetch<ProjectsPageType>(projectsPageQuery, {}, { next: { tags: ["projectsPage"] } }),
+    cachedFetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } }),
+    cachedFetch<ProjectsPageType>(projectsPageQuery, {}, { next: { tags: ["projectsPage"] } }),
   ]);
 
   return (

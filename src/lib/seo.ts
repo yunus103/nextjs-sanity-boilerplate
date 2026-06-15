@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
-import { defaultSeoQuery } from "@/sanity/lib/queries";
+import { cachedFetch } from "@/sanity/lib/client";
+import { layoutQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
-import { SanityImage } from "@/types";
+import { SanityImage, SiteSettings, Navigation } from "@/types";
 
 type PageSeo = {
   metaTitle?: string;
@@ -45,12 +45,21 @@ export function portableTextToPlainText(value?: PortableTextBlock[], maxLength =
   return text.length > maxLength ? `${text.slice(0, maxLength - 3).trimEnd()}...` : text;
 }
 
-export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
-  const defaults = await client.fetch(defaultSeoQuery, {}, { next: { tags: ["layout"] } });
+export interface LayoutData {
+  settings: SiteSettings;
+  navigation: Navigation;
+}
 
-  const siteName = defaults?.siteName || "Site Adı";
-  const siteTagline = defaults?.siteTagline || "";
-  const defaultMetaTitle = defaults?.title || ""; // siteSettings -> defaultSeo -> metaTitle
+export function getLayoutData(): Promise<LayoutData> {
+  return cachedFetch<LayoutData>(layoutQuery, {}, { next: { tags: ["layout"] } });
+}
+
+export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
+  const { settings } = await getLayoutData();
+
+  const siteName = settings?.siteName || "Site Adı";
+  const siteTagline = settings?.siteTagline || "";
+  const defaultMetaTitle = settings?.defaultSeo?.metaTitle || "";
   const isHomePage = params.canonicalPath === "/";
 
   let title = "";
@@ -74,15 +83,15 @@ export async function buildMetadata(params: BuildMetadataParams = {}): Promise<M
     title = pageTitle ? `${pageTitle} | ${siteName}` : siteName;
   }
 
-  const description = params.pageSeo?.metaDescription || params.description || defaults?.description;
-  const ogImageSource = params.pageSeo?.ogImage || params.ogImage || defaults?.ogImage;
+  const description = params.pageSeo?.metaDescription || params.description || settings?.defaultSeo?.metaDescription;
+  const ogImageSource = params.pageSeo?.ogImage || params.ogImage || settings?.defaultOgImage;
   const siteUrl = getSiteUrl();
   const canonicalUrl =
     params.pageSeo?.canonicalUrl ||
     (params.canonicalPath ? `${siteUrl}${params.canonicalPath}` : undefined);
   const noIndex = params.pageSeo?.noIndex || params.noIndex || false;
 
-  const faviconUrl = defaults?.favicon?.asset?.url || "/favicon.ico";
+  const faviconUrl = settings?.favicon?.asset?.url || "/favicon.ico";
   const ogImageUrl = ogImageSource
     ? urlForImage(ogImageSource)?.width(1200).height(630).url()
     : undefined;
@@ -111,7 +120,8 @@ export async function buildMetadata(params: BuildMetadataParams = {}): Promise<M
       ...(ogImageUrl && { images: [ogImageUrl] }),
     },
     verification: {
-      google: defaults?.googleSearchConsoleId || undefined,
+      google: settings?.googleSearchConsoleId || undefined,
     },
   };
 }
+

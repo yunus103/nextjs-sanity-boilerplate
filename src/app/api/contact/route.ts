@@ -30,15 +30,6 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
-// Bellek sızıntısını önlemek için periyodik temizlik
-// (Instance warm olduğu sürece çalışır, serverless'ta zararsız)
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of ipStore.entries()) {
-    if (now > entry.resetAt) ipStore.delete(ip);
-  }
-}, RATE_LIMIT_WINDOW_MS);
-
 // ---------------------------------------------------------------------------
 // XSS Koruması — HTML Escape
 // Mail şablonuna enjekte edilen içeriği güvenli hale getirir.
@@ -68,6 +59,12 @@ const schema = z.object({
 // Handler
 // ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
+  // Bellek sızıntısını önlemek için süresi dolmuş eski kayıtları temizle (lazy cleaning)
+  const now = Date.now();
+  for (const [ip, entry] of ipStore.entries()) {
+    if (now > entry.resetAt) ipStore.delete(ip);
+  }
+
   // 1. Content-Type kontrolü
   const contentType = request.headers.get("content-type") || "";
   if (!contentType.includes("application/json")) {

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, getLayoutData } from "@/lib/seo";
 
-import { client } from "@/sanity/lib/client";
-import { layoutQuery } from "@/sanity/lib/queries";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/seo/JsonLd";
 import NextTopLoader from "nextjs-toploader";
@@ -16,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { settings } = await client.fetch(layoutQuery, {}, { next: { tags: ["layout"] } });
+  const { settings } = await getLayoutData();
 
   return (
     <html lang="tr" suppressHydrationWarning>

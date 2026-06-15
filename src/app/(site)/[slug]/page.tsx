@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
-import { blogPostBySlugQuery, blogListQuery, layoutQuery } from "@/sanity/lib/queries";
-import { buildMetadata } from "@/lib/seo";
+import { client, cachedFetch } from "@/sanity/lib/client";
+import { blogPostBySlugQuery, blogSlugsQuery } from "@/sanity/lib/queries";
+import { buildMetadata, getLayoutData } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { FadeIn } from "@/components/ui/FadeIn";
@@ -17,13 +17,13 @@ import { BlogPost } from "@/types";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const posts = await client.fetch(blogListQuery, {}, { next: { tags: ["blog"] } });
-  return (posts || []).map((post: BlogPost) => ({ slug: post.slug?.current }));
+  const posts = await cachedFetch<Array<{ slug: string }>>(blogSlugsQuery, {}, { next: { tags: ["blog"] } });
+  return (posts || []).map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await client.fetch(blogPostBySlugQuery, { slug }, { next: { tags: [`blogPost:${slug}`] } });
+  const post = await cachedFetch<BlogPost | null>(blogPostBySlugQuery, { slug }, { next: { tags: [`blogPost:${slug}`] } });
   if (!post) return {};
   
   const baseSeo = await buildMetadata({
@@ -43,19 +43,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const [post, layoutData] = await Promise.all([
-    client.fetch(
+    cachedFetch<BlogPost | null>(
       blogPostBySlugQuery,
       { slug },
       { next: { tags: [`blogPost:${slug}`] } }
     ),
-    client.fetch(layoutQuery, {}, { next: { tags: ["layout"] } }),
+    getLayoutData(),
   ]);
 
   if (!post) notFound();
 
-  let relatedPosts = [];
+  let relatedPosts: BlogPost[] = [];
   if (post.category?._id) {
-    relatedPosts = await client.fetch(
+    relatedPosts = await cachedFetch<BlogPost[]>(
       blogRelatedPostsQuery,
       { categoryId: post.category._id, currentPostId: post._id },
       { next: { tags: [`blogPost:${slug}`] } }
@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }: Props) {
           <RichText value={post.body} />
         </FadeIn>
 
-        {post.seoTags?.length > 0 && (
+        {post.seoTags && post.seoTags.length > 0 && (
           <FadeIn delay={0.3}>
             <div className="mt-16 pt-8 border-t">
               <h3 className="text-sm font-semibold mb-3 text-muted-foreground">Etiketler:</h3>

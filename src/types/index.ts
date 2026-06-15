@@ -46,6 +46,7 @@ export interface BlogPost {
   mainImage?: SanityImage;
   body?: any[];
   seoTags?: string[];
+  seo?: SeoSettings;
 }
 
 export interface SocialLink {
@@ -72,6 +73,11 @@ export interface SiteSettings {
   gaId?: string;
   gtmId?: string;
   googleSearchConsoleId?: string;
+  defaultSeo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  defaultOgImage?: SanityImage;
 }
 
 export interface NavItem {
@@ -94,6 +100,7 @@ export interface Service {
   slug: SanitySlug;
   mainImage?: SanityImage;
   body?: any[];
+  seo?: SeoSettings;
 }
 
 export interface Project {
@@ -104,6 +111,7 @@ export interface Project {
   slug: SanitySlug;
   mainImage?: SanityImage;
   body?: any[];
+  seo?: SeoSettings;
 }
 
 export interface CtaLink {

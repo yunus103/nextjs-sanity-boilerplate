@@ -1,13 +1,13 @@
 import { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { blogListQuery, blogCategoriesQuery, blogPageQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { BlogFilter } from "@/components/blog/BlogFilter";
 import { PageHero } from "@/components/layout/PageHero";
-import { BlogPage as BlogPageType } from "@/types";
+import { BlogPage as BlogPageType, BlogPost, BlogCategory } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pageData = await client.fetch<BlogPageType>(blogPageQuery, {}, { next: { tags: ["blogPage"] } });
+  const pageData = await cachedFetch<BlogPageType>(blogPageQuery, {}, { next: { tags: ["blogPage"] } });
   return buildMetadata({
     title: pageData?.heroTitle || pageData?.pageTitle || "Blog",
     canonicalPath: "/blog",
@@ -17,9 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogListPage() {
   const [posts, categories, pageData] = await Promise.all([
-    client.fetch(blogListQuery, {}, { next: { tags: ["blog"] } }),
-    client.fetch(blogCategoriesQuery, {}, { next: { tags: ["blog"] } }),
-    client.fetch<BlogPageType>(blogPageQuery, {}, { next: { tags: ["blogPage"] } })
+    cachedFetch<BlogPost[]>(blogListQuery, {}, { next: { tags: ["blog"] } }),
+    cachedFetch<BlogCategory[]>(blogCategoriesQuery, {}, { next: { tags: ["blog"] } }),
+    cachedFetch<BlogPageType>(blogPageQuery, {}, { next: { tags: ["blogPage"] } })
   ]);
 
   return (

@@ -10,7 +10,9 @@ export const layoutQuery = groq`{
     favicon { asset->{ _id, url } },
     contactInfo { phone, email, address, whatsappNumber, mapIframe },
     socialLinks[] { platform, url },
-    gaId, gtmId, googleSearchConsoleId
+    gaId, gtmId, googleSearchConsoleId,
+    defaultSeo { metaTitle, metaDescription },
+    defaultOgImage { asset->{ _id, url, metadata { lqip, dimensions } } }
   },
   "navigation": *[_type == "navigation"][0] {
     headerLinks[] { label, href, openInNewTab, subLinks[] { label, href, openInNewTab } },
@@ -177,3 +179,8 @@ export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
   favicon { asset->{ _id, url } },
   googleSearchConsoleId
 }`;
+
+export const blogSlugsQuery = groq`*[_type == "blogPost" && defined(slug.current)] { "slug": slug.current }`;
+export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.current)] { "slug": slug.current }`;
+export const serviceSlugsQuery = groq`*[_type == "service" && defined(slug.current)] { "slug": slug.current }`;
+

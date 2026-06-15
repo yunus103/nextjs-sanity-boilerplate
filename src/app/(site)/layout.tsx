@@ -1,11 +1,10 @@
-import { client } from "@/sanity/lib/client";
-import { layoutQuery } from "@/sanity/lib/queries";
+import { getLayoutData } from "@/lib/seo";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const data = await client.fetch(layoutQuery, {}, { next: { tags: ["layout"] } });
+  const data = await getLayoutData();
 
   return (
     <>

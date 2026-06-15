@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
-import { serviceBySlugQuery, serviceListQuery } from "@/sanity/lib/queries";
+import { client, cachedFetch } from "@/sanity/lib/client";
+import { serviceBySlugQuery, serviceSlugsQuery } from "@/sanity/lib/queries";
 import { buildMetadata, portableTextToPlainText } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
@@ -15,13 +15,13 @@ import { JsonLd, serviceJsonLd } from "@/components/seo/JsonLd";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const services = await client.fetch(serviceListQuery, {}, { next: { tags: ["services"] } });
-  return (services || []).map((s: Service) => ({ slug: s.slug?.current }));
+  const services = await cachedFetch<Array<{ slug: string }>>(serviceSlugsQuery, {}, { next: { tags: ["services"] } });
+  return (services || []).map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const service = await client.fetch(serviceBySlugQuery, { slug }, { next: { tags: [`service:${slug}`] } });
+  const service = await cachedFetch<Service | null>(serviceBySlugQuery, { slug }, { next: { tags: [`service:${slug}`] } });
   if (!service) return {};
   return buildMetadata({
     title: service.title,
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServicePage({ params }: Props) {
   const { slug } = await params;
-  const service = await client.fetch(
+  const service = await cachedFetch<Service | null>(
     serviceBySlugQuery,
     { slug },
     { next: { tags: [`service:${slug}`] } }

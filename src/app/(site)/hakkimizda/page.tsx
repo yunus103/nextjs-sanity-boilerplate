@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { aboutPageQuery } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { FadeIn } from "@/components/ui/FadeIn";
@@ -9,7 +9,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { AboutPage as AboutPageType } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await client.fetch<AboutPageType>(aboutPageQuery, {}, { next: { tags: ["about"] } });
+  const data = await cachedFetch<AboutPageType>(aboutPageQuery, {}, { next: { tags: ["about"] } });
   return buildMetadata({
     title: data?.heroTitle || data?.pageTitle || "Hakkımızda",
     canonicalPath: "/hakkimizda",
@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const data = await client.fetch<AboutPageType>(aboutPageQuery, {}, { next: { tags: ["about"] } });
+  const data = await cachedFetch<AboutPageType>(aboutPageQuery, {}, { next: { tags: ["about"] } });
 
   return (
     <div className="flex flex-col gap-12 md:gap-16 pb-16">

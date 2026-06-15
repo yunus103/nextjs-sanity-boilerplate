@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
-import { projectBySlugQuery, projectListQuery } from "@/sanity/lib/queries";
+import { client, cachedFetch } from "@/sanity/lib/client";
+import { projectBySlugQuery, projectSlugsQuery } from "@/sanity/lib/queries";
 import { buildMetadata, portableTextToPlainText } from "@/lib/seo";
 import { RichText } from "@/components/ui/RichText";
 import { SanityImage } from "@/components/ui/SanityImage";
@@ -15,13 +15,13 @@ import { JsonLd, projectJsonLd } from "@/components/seo/JsonLd";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const projects = await client.fetch(projectListQuery, {}, { next: { tags: ["projects"] } });
-  return (projects || []).map((p: Project) => ({ slug: p.slug?.current }));
+  const projects = await cachedFetch<Array<{ slug: string }>>(projectSlugsQuery, {}, { next: { tags: ["projects"] } });
+  return (projects || []).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = await client.fetch(projectBySlugQuery, { slug }, { next: { tags: [`project:${slug}`] } });
+  const project = await cachedFetch<Project | null>(projectBySlugQuery, { slug }, { next: { tags: [`project:${slug}`] } });
   if (!project) return {};
   return buildMetadata({
     title: project.title,
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = await client.fetch(
+  const project = await cachedFetch<Project | null>(
     projectBySlugQuery,
     { slug },
     { next: { tags: [`project:${slug}`] } }
