@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = await client.fetch(projectBySlugQuery, { slug }, { next: { tags: ["projects"] } });
+  const project = await client.fetch(projectBySlugQuery, { slug }, { next: { tags: [`project:${slug}`] } });
   if (!project) return {};
   return buildMetadata({
     title: project.title,
@@ -36,7 +36,7 @@ export default async function ProjectPage({ params }: Props) {
   const project = await client.fetch(
     projectBySlugQuery,
     { slug },
-    { next: { tags: ["projects"] } }
+    { next: { tags: [`project:${slug}`] } }
   );
 
   if (!project) notFound();

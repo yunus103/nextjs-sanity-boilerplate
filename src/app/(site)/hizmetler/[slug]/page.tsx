@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const service = await client.fetch(serviceBySlugQuery, { slug }, { next: { tags: ["services"] } });
+  const service = await client.fetch(serviceBySlugQuery, { slug }, { next: { tags: [`service:${slug}`] } });
   if (!service) return {};
   return buildMetadata({
     title: service.title,
@@ -36,7 +36,7 @@ export default async function ServicePage({ params }: Props) {
   const service = await client.fetch(
     serviceBySlugQuery,
     { slug },
-    { next: { tags: ["services"] } }
+    { next: { tags: [`service:${slug}`] } }
   );
 
   if (!service) notFound();

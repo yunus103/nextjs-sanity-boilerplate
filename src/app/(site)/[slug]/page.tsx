@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = await client.fetch(blogPostBySlugQuery, { slug }, { next: { tags: ["blog"] } });
+  const post = await client.fetch(blogPostBySlugQuery, { slug }, { next: { tags: [`blogPost:${slug}`] } });
   if (!post) return {};
   
   const baseSeo = await buildMetadata({
@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: Props) {
     client.fetch(
       blogPostBySlugQuery,
       { slug },
-      { next: { tags: ["blog"] } }
+      { next: { tags: [`blogPost:${slug}`] } }
     ),
     client.fetch(layoutQuery, {}, { next: { tags: ["layout"] } }),
   ]);
@@ -58,7 +58,7 @@ export default async function BlogPostPage({ params }: Props) {
     relatedPosts = await client.fetch(
       blogRelatedPostsQuery,
       { categoryId: post.category._id, currentPostId: post._id },
-      { next: { tags: ["blog"] } }
+      { next: { tags: [`blogPost:${slug}`] } }
     );
   }
 
