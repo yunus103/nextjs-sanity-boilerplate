@@ -33,8 +33,14 @@ export async function POST(req: Request) {
     }
 
     const payload = JSON.parse(body);
+    const _id = payload._id || payload.document?._id;
     const _type = payload._type || payload.document?._type;
     const slug = payload.slug || payload.document?.slug;
+
+    if (_id && _id.startsWith("drafts.")) {
+      console.log(`[Sanity Webhook] Skipping draft document revalidation: ${_id}`);
+      return NextResponse.json({ revalidated: false, message: "Skipped draft document" });
+    }
 
     console.log(`[Sanity Webhook] Revalidating type: ${_type}`);
 

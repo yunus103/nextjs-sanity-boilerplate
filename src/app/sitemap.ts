@@ -3,6 +3,8 @@ import { client } from "@/sanity/lib/client";
 import { allSlugsForSitemapQuery } from "@/sanity/lib/queries";
 import { getSiteUrl } from "@/lib/utils";
 
+export const revalidate = 86400; // Cache sitemap for 24 hours on CDN Edge
+
 type SitemapItem = {
   slug: string;
   _updatedAt?: string;
