@@ -2,15 +2,10 @@
 
 import Image from "next/image";
 import { urlForImage, getImageLqip } from "@/sanity/lib/image";
+import { SanityImage as SanityImageType } from "@/types";
 
 type SanityImageProps = {
-  image: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    asset: any;
-    alt?: string;
-    hotspot?: { x: number; y: number };
-    crop?: { top: number; bottom: number; left: number; right: number };
-  };
+  image: SanityImageType;
   width?: number;
   height?: number;
   fill?: boolean;
