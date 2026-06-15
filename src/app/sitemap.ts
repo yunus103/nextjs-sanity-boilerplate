@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { allSlugsForSitemapQuery } from "@/sanity/lib/queries";
 import { getSiteUrl } from "@/lib/utils";
 
@@ -28,7 +28,11 @@ function lastModified(updatedAt?: string) {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
-  const data = await client.fetch<SitemapData>(allSlugsForSitemapQuery);
+  const data = await cachedFetch<SitemapData>(
+    allSlugsForSitemapQuery,
+    {},
+    { next: { tags: ["sitemap"] } }
+  );
   const pages = data?.pages;
 
   const staticRouteEntries: MetadataRoute.Sitemap = [
