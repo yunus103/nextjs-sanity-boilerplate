@@ -91,6 +91,11 @@ export const blogListQuery = groq`*[_type == "blogPost"] | order(publishedAt des
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
+export const blogFallbackQuery = groq`*[_type == "blogPost"] | order(publishedAt desc)[0...3] {
+  title, slug, excerpt, publishedAt, category->{title, slug},
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
 export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current == $slug][0] {
   _id, _updatedAt, title, slug, publishedAt, excerpt, category->{_id, title, slug}, seoTags,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
@@ -125,6 +130,11 @@ export const serviceListQuery = groq`*[_type == "service"] | order(_createdAt as
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;
 
+export const serviceFallbackQuery = groq`*[_type == "service"] | order(_createdAt asc)[0...3] {
+  title, slug,
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
 export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $slug][0] {
   title, slug,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
@@ -138,6 +148,11 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
 // ─── Projeler ──────────────────────────────────────────────────────────────────
 
 export const projectListQuery = groq`*[_type == "project"] | order(_createdAt asc) {
+  title, slug,
+  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+}`;
+
+export const projectFallbackQuery = groq`*[_type == "project"] | order(_createdAt asc)[0...3] {
   title, slug,
   mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
 }`;

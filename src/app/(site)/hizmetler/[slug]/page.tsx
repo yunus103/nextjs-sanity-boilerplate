@@ -15,13 +15,13 @@ import { JsonLd, serviceJsonLd } from "@/components/seo/JsonLd";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const services = await cachedFetch<Array<{ slug: string }>>(serviceSlugsQuery, {}, { next: { tags: ["services"] } });
+  const services = await cachedFetch<Array<{ slug: string }>>(serviceSlugsQuery, {}, { next: { tags: ["service:list"] } });
   return (services || []).map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const service = await cachedFetch<Service | null>(serviceBySlugQuery, { slug }, { next: { tags: [`service:${slug}`] } });
+  const service = await cachedFetch<Service | null>(serviceBySlugQuery, { slug }, { next: { tags: [`service:detail:${slug}`] } });
   if (!service) return {};
   return buildMetadata({
     title: service.title,
@@ -36,7 +36,7 @@ export default async function ServicePage({ params }: Props) {
   const service = await cachedFetch<Service | null>(
     serviceBySlugQuery,
     { slug },
-    { next: { tags: [`service:${slug}`] } }
+    { next: { tags: [`service:detail:${slug}`] } }
   );
 
   if (!service) notFound();

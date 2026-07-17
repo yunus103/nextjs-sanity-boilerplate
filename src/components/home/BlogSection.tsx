@@ -41,7 +41,7 @@ export function BlogSection({
           <div className="space-y-12">
             <AnimateGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.slice(0, 3).map((post: BlogPost) => (
-                <Link key={post.slug?.current} href={`/${post.slug?.current}`} className="group block">
+                <Link key={post.slug?.current} href={`/blog/${post.slug?.current}`} className="group block">
                   <article className="border rounded-xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
                     {post.mainImage && (
                       <div className="relative aspect-video overflow-hidden">

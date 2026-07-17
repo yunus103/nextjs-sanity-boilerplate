@@ -62,8 +62,60 @@ Tarayıcıda:
    - URL: `https://siteadi.com/api/revalidate`
    - HTTP Method: `POST`
    - Trigger on: **Create, Update, Delete**
+   - Drafts ve versions: **Kapalı**
    - Secret: Sanity Dashboard'daki Secret alanına `.env.local`'daki `SANITY_WEBHOOK_SECRET` değerini girin. (Header olarak değil, direkt dashboard'daki Secret kutusuna)
-3. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini güncelleyin. Uygulama `@sanity/webhook` paketi ile imzayı otomatik doğrular.
+3. **Filter** alanına aşağıdaki GROQ filtresini ekleyin:
+
+```groq
+_type in [
+  "siteSettings",
+  "navigation",
+  "homePage",
+  "aboutPage",
+  "contactPage",
+  "blogPage",
+  "servicesPage",
+  "projectsPage",
+  "blogPost",
+  "blogCategory",
+  "service",
+  "project",
+  "faq"
+]
+```
+
+4. **Projection** alanına aşağıdaki payload sözleşmesini ekleyin:
+
+```groq
+{
+  "_id": coalesce(after()._id, before()._id),
+  "_type": coalesce(after()._type, before()._type),
+  "operation": delta::operation(),
+  "slug": after().slug.current,
+  "previousSlug": before().slug.current,
+  "categoryId": after().category._ref,
+  "previousCategoryId": before().category._ref,
+  "slugChanged": select(
+    delta::operation() == "update" => delta::changedAny(slug.current),
+    false
+  ),
+  "noIndexChanged": select(
+    delta::operation() == "update" => delta::changedAny(seo.noIndex),
+    false
+  ),
+  "affectsList": select(
+    delta::operation() != "update" => true,
+    _type == "blogPost" => delta::changedAny((title, slug.current, excerpt, publishedAt, category, mainImage, seo.noIndex)),
+    _type == "service" => delta::changedAny((title, slug.current, mainImage, seo.noIndex)),
+    _type == "project" => delta::changedAny((title, slug.current, mainImage, seo.noIndex)),
+    false
+  )
+}
+```
+
+Bu projection zorunludur. Delete olayında eski slug'ı, slug değişikliğinde hem eski hem yeni slug'ı endpoint'e taşır. Sitemap yalnızca create/delete, slug veya `noIndex` değişikliklerinde invalidate edilir.
+
+5. `.env.local` içinde `SANITY_WEBHOOK_SECRET` değerini güncelleyin. Uygulama `@sanity/webhook` paketi ile imzayı otomatik doğrular.
 
 ### 4. Gmail SMTP Kurulumu (İletişim Formu)
 
@@ -91,7 +143,7 @@ Tarayıcıda:
 src/
 ├── app/
 │   ├── (site)/           # Kullanıcıya görünen tüm sayfalar
-│   │   ├── [slug]/       # Dinamik blog detay sayfaları
+│   │   ├── blog/[slug]/  # Dinamik blog detay sayfaları
 │   │   ├── page.tsx      # Ana sayfa
 │   │   ├── blog/         # Blog listesi hub sayfası
 │   │   ├── hizmetler/    # Hizmet hub ve [slug] detay sayfaları
@@ -136,6 +188,6 @@ Aşağıdaki zengin arama sonuçları şemaları kod yazmaya gerek kalmadan tama
 *   **Site-wide Organization & WebSite:** Root Layout'ta `siteSettings`'ten gelen logo, iletişim ve sosyal ağ verileriyle otomatik oluşturulur.
 *   **Ekmek Kırıntıları (Breadcrumbs):** İç sayfalarda `<Breadcrumbs>` bileşeni çağrıldığı anda dinamik URL hiyerarşisi üzerinden `BreadcrumbList` şemasını oluşturup sayfaya enjekte eder.
 *   **Taranabilir Sıkça Sorulan Sorular (FAQ):** `<FAQ>` bileşeni kullanıldığında, arama botlarının kapalı cevapları da %100 okuyabilmesi için answers DOM'da saklanır ve `FAQPage` şeması dinamik olarak sayfaya basılır.
-*   **Blog Yazıları:** `[slug]/page.tsx` rotasında dinamik `Article` şeması otomatik olarak basılır.
+*   **Blog Yazıları:** `blog/[slug]/page.tsx` rotasında dinamik `Article` şeması otomatik olarak basılır.
 *   **Hizmet & Projeler:** İlgili detay sayfalarında `Service` ve `CreativeWork` şemaları otomatik olarak yer alır.
 

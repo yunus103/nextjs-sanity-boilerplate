@@ -36,7 +36,7 @@ export function websiteJsonLd(settings?: SiteSettings) {
 }
 
 export function articleJsonLd(post?: BlogPost, settings?: SiteSettings) {
-  const url = `${getSiteUrl()}/${post?.slug?.current}`;
+  const url = `${getSiteUrl()}/blog/${post?.slug?.current}`;
   const publisherName = settings?.siteName || "Site Adı";
 
   return {

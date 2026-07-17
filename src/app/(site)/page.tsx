@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import { cachedFetch } from "@/sanity/lib/client";
 import {
   homePageQuery,
-  serviceListQuery,
-  projectListQuery,
-  blogListQuery,
+  serviceFallbackQuery,
+  projectFallbackQuery,
+  blogFallbackQuery,
 } from "@/sanity/lib/queries";
 import { buildMetadata } from "@/lib/seo";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -15,7 +15,7 @@ import { BlogSection } from "@/components/home/BlogSection";
 import { HomePage as HomePageType, Service, Project, BlogPost } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
+  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home", "home:featured"] } });
   return buildMetadata({
     canonicalPath: "/",
     pageSeo: data?.seo,
@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   // 1. First fetch the main homepage configuration
-  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home"] } });
+  const data = await cachedFetch<HomePageType>(homePageQuery, {}, { next: { tags: ["home", "home:featured"] } });
 
   // 2. Determine if fallback queries are actually needed
   const needsFallbackServices = !data?.featuredServices || data.featuredServices.length === 0;
@@ -34,13 +34,13 @@ export default async function HomePage() {
   // 3. Fetch fallbacks in parallel only if necessary
   const [fallbackServices, fallbackProjects, fallbackPosts] = await Promise.all([
     needsFallbackServices
-      ? cachedFetch<Service[]>(serviceListQuery, {}, { next: { tags: ["services"] } })
+      ? cachedFetch<Service[]>(serviceFallbackQuery, {}, { next: { tags: ["service:list"] } })
       : Promise.resolve([]),
     needsFallbackProjects
-      ? cachedFetch<Project[]>(projectListQuery, {}, { next: { tags: ["projects"] } })
+      ? cachedFetch<Project[]>(projectFallbackQuery, {}, { next: { tags: ["project:list"] } })
       : Promise.resolve([]),
     needsFallbackPosts
-      ? cachedFetch<BlogPost[]>(blogListQuery, {}, { next: { tags: ["blog"] } })
+      ? cachedFetch<BlogPost[]>(blogFallbackQuery, {}, { next: { tags: ["blog:list", "blog:categories"] } })
       : Promise.resolve([]),
   ]);
 

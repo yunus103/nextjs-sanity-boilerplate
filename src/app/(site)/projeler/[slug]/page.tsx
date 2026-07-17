@@ -15,13 +15,13 @@ import { JsonLd, projectJsonLd } from "@/components/seo/JsonLd";
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const projects = await cachedFetch<Array<{ slug: string }>>(projectSlugsQuery, {}, { next: { tags: ["projects"] } });
+  const projects = await cachedFetch<Array<{ slug: string }>>(projectSlugsQuery, {}, { next: { tags: ["project:list"] } });
   return (projects || []).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = await cachedFetch<Project | null>(projectBySlugQuery, { slug }, { next: { tags: [`project:${slug}`] } });
+  const project = await cachedFetch<Project | null>(projectBySlugQuery, { slug }, { next: { tags: [`project:detail:${slug}`] } });
   if (!project) return {};
   return buildMetadata({
     title: project.title,
@@ -36,7 +36,7 @@ export default async function ProjectPage({ params }: Props) {
   const project = await cachedFetch<Project | null>(
     projectBySlugQuery,
     { slug },
-    { next: { tags: [`project:${slug}`] } }
+    { next: { tags: [`project:detail:${slug}`] } }
   );
 
   if (!project) notFound();
