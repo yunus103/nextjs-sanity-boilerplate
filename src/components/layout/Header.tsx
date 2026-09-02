@@ -22,11 +22,31 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
 
   // Sayfa değiştiğinde menüyü kapat
   useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Menü açıkken arka plan scroll kilidi
+  useEffect(() => {
     if (menuOpen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setMenuOpen(false);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
-  }, [pathname, menuOpen, setMenuOpen]);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  // Escape tuşuna basıldığında menüyü kapat
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    if (menuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [menuOpen]);
 
   const isActive = (item: NavItem) => {
     const href = resolveHref(item);
@@ -63,30 +83,39 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
 
         {/* Mobile Controls */}
         <div className="flex items-center gap-2 md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menüyü aç/kapat">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
             {menuOpen ? <RiCloseLine size={20} /> : <RiMenu3Line size={20} />}
           </Button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Sağdan sola kayarak açılan tam ekran menü */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t md:hidden overflow-hidden"
+            id="mobile-menu"
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed inset-x-0 top-20 bottom-0 h-[calc(100dvh-5rem)] bg-background/98 backdrop-blur-md z-40 md:hidden overflow-y-auto border-t"
           >
-            <nav className="container mx-auto flex flex-col gap-2 px-4 py-6">
+            <nav className="container mx-auto flex flex-col gap-2 px-6 py-6">
               {links.map((item, i) => (
                 <div key={i} className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <Link
                       href={resolveHref(item)}
                       className={cn(
-                        "text-base font-medium py-2 transition-colors hover:text-primary",
-                        isActive(item) ? "text-primary" : "text-foreground"
+                        "text-base font-medium py-2.5 transition-colors hover:text-primary",
+                        isActive(item) ? "text-primary font-semibold" : "text-foreground"
                       )}
                     >
                       {item.label}
