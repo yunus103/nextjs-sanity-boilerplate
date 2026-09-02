@@ -86,10 +86,15 @@ export function faqPageJsonLd(faqs: { question: string; answer: string }[]) {
 
 export function breadcrumbListJsonLd(items: { label: string; href: string }[]) {
   const siteUrl = getSiteUrl();
+  const allItems = [
+    { label: "Ana Sayfa", href: "/" },
+    ...items.filter((item) => item.href !== "/"),
+  ];
+
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
+    itemListElement: allItems.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.label,

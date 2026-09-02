@@ -187,3 +187,9 @@ export interface HomePage {
   featuredPosts?: BlogPost[];
   seo?: SeoSettings;
 }
+
+export interface BreadcrumbItem {
+  label: string;
+  href: string;
+  active?: boolean;
+}

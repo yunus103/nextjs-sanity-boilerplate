@@ -1,12 +1,13 @@
 import { SanityImage } from "@/components/ui/SanityImage";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { SanityImage as SanityImageType } from "@/types";
+import { SanityImage as SanityImageType, BreadcrumbItem } from "@/types";
 
 interface PageHeroProps {
   title: string;
   subtitle?: string;
   backgroundImage?: SanityImageType;
+  breadcrumbs?: BreadcrumbItem[];
   className?: string;
 }
 
@@ -14,6 +15,7 @@ export function PageHero({
   title,
   subtitle,
   backgroundImage,
+  breadcrumbs,
   className = "",
 }: PageHeroProps) {
   return (
@@ -40,7 +42,10 @@ export function PageHero({
         <div className="max-w-3xl">
           <FadeIn direction="up" duration={0.6}>
             {/* Breadcrumbs */}
-            <Breadcrumbs className={`mb-6 ${backgroundImage?.asset ? "text-white/60 [&_a]:text-white/60 [&_a:hover]:text-white [&_span]:text-white" : ""}`} />
+            <Breadcrumbs
+              items={breadcrumbs}
+              className={`mb-6 ${backgroundImage?.asset ? "text-white/60 [&_a]:text-white/60 [&_a:hover]:text-white [&_span]:text-white" : ""}`}
+            />
 
             <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 ${backgroundImage?.asset ? "text-white" : "text-foreground"}`}>
               {title}
