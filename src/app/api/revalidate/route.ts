@@ -36,7 +36,6 @@ const singletonTags: Record<string, string> = {
   blogPage: "blogPage",
   servicesPage: "servicesPage",
   projectsPage: "projectsPage",
-  faq: "faq",
 };
 
 const sitemapPageTypes = new Set([

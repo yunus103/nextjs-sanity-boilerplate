@@ -13,7 +13,6 @@ import { blogPostType } from "./documents/blogPost";
 import { blogCategoryType } from "./documents/blogCategory";
 import { serviceType } from "./documents/service";
 import { projectType } from "./documents/project";
-import { faqType } from "./documents/faq";
 
 export const schemaTypes = [
   // Objects
@@ -34,6 +33,5 @@ export const schemaTypes = [
   blogCategoryType,
   serviceType,
   projectType,
-  faqType,
 ];
 
