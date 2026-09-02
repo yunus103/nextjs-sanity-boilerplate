@@ -2,23 +2,65 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { Button } from "@/components/ui/button";
-import { RiMenu3Line, RiCloseLine, RiArrowDownSLine } from "react-icons/ri";
+import {
+  FaInstagram,
+  FaFacebook,
+  FaLinkedin,
+  FaYoutube,
+  FaTiktok,
+  FaPinterest,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { RiMenu3Line, RiCloseLine, RiArrowDownSLine, RiMailLine, RiPhoneLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 
-import { SiteSettings, Navigation, NavItem } from "@/types";
+import { SanityImage as SanityImageType, NavItem, SocialLink } from "@/types";
+
+const socialIconMap: Record<string, React.ElementType> = {
+  instagram: FaInstagram,
+  facebook: FaFacebook,
+  twitter: FaXTwitter,
+  linkedin: FaLinkedin,
+  youtube: FaYoutube,
+  tiktok: FaTiktok,
+  pinterest: FaPinterest,
+  whatsapp: FaWhatsapp,
+};
+
+export interface HeaderContactInfo {
+  phone?: string;
+  email?: string;
+  whatsappNumber?: string;
+  address?: string;
+}
+
+export interface HeaderProps {
+  siteName?: string;
+  logo?: SanityImageType;
+  links?: NavItem[];
+  contactInfo?: HeaderContactInfo;
+  socialLinks?: SocialLink[];
+}
 
 function resolveHref(item: NavItem): string {
   return item.href || "#";
 }
 
-export function Header({ settings, navigation }: { settings: SiteSettings; navigation: Navigation }) {
+export function Header({
+  siteName,
+  logo,
+  links = [],
+  contactInfo,
+  socialLinks = [],
+}: HeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
-  const links: NavItem[] = navigation?.headerLinks || [];
 
   // Sayfa değiştiğinde menüyü kapat
   useEffect(() => {
@@ -57,11 +99,16 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <Link href="/" className="flex items-center group h-full">
+        <Link
+          href="/"
+          prefetch={false}
+          onMouseEnter={() => router.prefetch("/")}
+          className="flex items-center group h-full"
+        >
           <div className="relative flex items-center justify-start transition-all duration-200 group-hover:scale-[1.02] active:scale-95 h-full py-4 max-w-[250px] md:max-w-[450px]">
-            {settings?.logo ? (
+            {logo ? (
               <SanityImage
-                image={settings.logo}
+                image={logo}
                 width={800}
                 height={200}
                 fit="max"
@@ -69,7 +116,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                 priority
               />
             ) : (
-              <span className="font-bold text-xl tracking-tight leading-none">{settings?.siteName}</span>
+              <span className="font-bold text-xl tracking-tight leading-none">{siteName}</span>
             )}
           </div>
         </Link>
@@ -113,6 +160,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                   <div className="flex items-center justify-between">
                     <Link
                       href={resolveHref(item)}
+                      prefetch={false}
                       className={cn(
                         "text-base font-medium py-2.5 transition-colors hover:text-primary",
                         isActive(item) ? "text-primary font-semibold" : "text-foreground"
@@ -127,6 +175,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                         <Link
                           key={j}
                           href={resolveHref(sub)}
+                          prefetch={false}
                           className={cn(
                             "text-sm font-medium py-2 transition-colors hover:text-primary",
                             isActive(sub) ? "text-primary" : "text-muted-foreground"
@@ -139,6 +188,49 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
                   )}
                 </div>
               ))}
+
+              {(contactInfo?.phone || contactInfo?.email || (socialLinks && socialLinks.length > 0)) && (
+                <div className="mt-8 pt-6 border-t flex flex-col gap-4">
+                  {contactInfo?.phone && (
+                    <a
+                      href={`tel:${contactInfo.phone}`}
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <RiPhoneLine className="shrink-0" />
+                      {contactInfo.phone}
+                    </a>
+                  )}
+                  {contactInfo?.email && (
+                    <a
+                      href={`mailto:${contactInfo.email}`}
+                      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <RiMailLine className="shrink-0" />
+                      {contactInfo.email}
+                    </a>
+                  )}
+                  {socialLinks && socialLinks.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {socialLinks.map((social, i) => {
+                        const Icon = socialIconMap[social.platform];
+                        if (!Icon || !social.url) return null;
+                        return (
+                          <a
+                            key={i}
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={social.platform}
+                            className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                          >
+                            <Icon size={16} />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
           </motion.div>
         )}
@@ -149,6 +241,7 @@ export function Header({ settings, navigation }: { settings: SiteSettings; navig
 
 function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   // Alt menü linklerinden biri aktifse üst menüyü de aktif boyarız
@@ -159,6 +252,8 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
     return (
       <Link
         href={resolveHref(item)}
+        prefetch={false}
+        onMouseEnter={() => router.prefetch(resolveHref(item))}
         target={item.openInNewTab ? "_blank" : undefined}
         rel={item.openInNewTab ? "noopener noreferrer" : undefined}
         className={cn(
@@ -179,6 +274,8 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
     >
       <Link
         href={resolveHref(item)}
+        prefetch={false}
+        onMouseEnter={() => router.prefetch(resolveHref(item))}
         className={cn(
           "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary",
           reallyActive ? "text-primary font-semibold" : "text-foreground/70"
@@ -206,6 +303,8 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
                   <Link
                     key={j}
                     href={resolveHref(sub)}
+                    prefetch={false}
+                    onMouseEnter={() => router.prefetch(resolveHref(sub))}
                     target={sub.openInNewTab ? "_blank" : undefined}
                     rel={sub.openInNewTab ? "noopener noreferrer" : undefined}
                     className={cn(

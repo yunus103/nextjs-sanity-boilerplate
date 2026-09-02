@@ -49,7 +49,7 @@ export function AboutSection({
             )}
 
             <FadeIn delay={0.25} className="pt-4">
-              <Button size="lg" render={<Link href={displayCtaLink} />}>
+              <Button size="lg" render={<Link href={displayCtaLink} prefetch={false} />}>
                 {displayCtaLabel}
               </Button>
             </FadeIn>

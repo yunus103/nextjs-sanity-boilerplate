@@ -36,7 +36,7 @@ export function ProjectsSection({
           <div className="space-y-12">
             <AnimateGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.slice(0, 3).map((project: Project) => (
-                <Link key={project.slug?.current} href={`/projeler/${project.slug?.current}`} className="group block relative overflow-hidden rounded-xl border aspect-[4/3]">
+                <Link key={project.slug?.current} href={`/projeler/${project.slug?.current}`} prefetch={false} className="group block relative overflow-hidden rounded-xl border aspect-[4/3]">
                   {project.mainImage ? (
                     <div className="absolute inset-0">
                       <SanityImage
@@ -70,7 +70,7 @@ export function ProjectsSection({
             </AnimateGroup>
             
             <FadeIn delay={0.2} className="text-center pt-4">
-              <Button variant="outline" size="lg" render={<Link href="/projeler" />}>
+              <Button variant="outline" size="lg" render={<Link href="/projeler" prefetch={false} />}>
                 Tüm Projeleri Gör
               </Button>
             </FadeIn>

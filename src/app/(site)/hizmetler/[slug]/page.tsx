@@ -46,7 +46,7 @@ export default async function ServicePage({ params }: Props) {
       <JsonLd data={serviceJsonLd(service)} />
       <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
       <FadeIn direction="up">
-        <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/hizmetler" />}>
+        <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/hizmetler" prefetch={false} />}>
           ← Hizmetlere Dön
         </Button>
         <h1 className="text-4xl font-bold mb-8">{service.title}</h1>

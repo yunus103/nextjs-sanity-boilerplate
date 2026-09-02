@@ -33,7 +33,7 @@ export default function Error({
           <RiRefreshLine className="h-4 w-4" />
           Tekrar Dene
         </Button>
-        <Button variant="outline" render={<Link href="/" />}>
+        <Button variant="outline" render={<Link href="/" prefetch={false} />}>
           Ana Sayfaya Dön
         </Button>
       </div>

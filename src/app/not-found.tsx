@@ -22,10 +22,10 @@ export default function NotFound() {
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-4">
-        <Button size="lg" render={<Link href="/" />} className="px-8 transform transition hover:scale-105">
+        <Button size="lg" render={<Link href="/" prefetch={false} />} className="px-8 transform transition hover:scale-105">
           Ana Sayfaya Git
         </Button>
-        <Button size="lg" variant="outline" render={<Link href="/iletisim" />} className="px-8">
+        <Button size="lg" variant="outline" render={<Link href="/iletisim" prefetch={false} />} className="px-8">
           Bize Ulaşın
         </Button>
       </div>

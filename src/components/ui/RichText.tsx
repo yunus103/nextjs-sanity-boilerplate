@@ -72,7 +72,7 @@ const components: PortableTextComponents = {
     link: ({ value, children }) => {
       const isInternal = value?.href?.startsWith("/");
       return isInternal ? (
-        <Link href={value.href} className="underline underline-offset-4 hover:text-primary">
+        <Link href={value.href} prefetch={false} className="underline underline-offset-4 hover:text-primary">
           {children}
         </Link>
       ) : (

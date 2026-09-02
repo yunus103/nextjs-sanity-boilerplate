@@ -38,7 +38,7 @@ export default async function ServicesHubPage() {
         {services && services.length > 0 ? (
           <AnimateGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service: Service) => (
-              <Link key={service.slug?.current} href={`/hizmetler/${service.slug?.current}`} className="group block">
+              <Link key={service.slug?.current} href={`/hizmetler/${service.slug?.current}`} prefetch={false} className="group block">
                 <article className="border rounded-xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
                   {service.mainImage && (
                     <div className="relative aspect-video overflow-hidden">
@@ -80,7 +80,7 @@ export default async function ServicesHubPage() {
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
               Size en uygun çözümü bulmak ve profesyonel destek almak için bizimle hemen iletişime geçin.
             </p>
-            <Button size="lg" render={<Link href={pageData.ctaLink} />}>
+            <Button size="lg" render={<Link href={pageData.ctaLink} prefetch={false} />}>
               {pageData.ctaLabel}
             </Button>
           </FadeIn>

@@ -56,6 +56,7 @@ export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[
         <li>
           <Link 
             href="/" 
+            prefetch={false}
             className="flex items-center hover:text-primary transition-colors gap-1"
             title="Ana Sayfa"
           >
@@ -74,6 +75,7 @@ export function Breadcrumbs({ items, className = "" }: { items?: BreadcrumbItem[
             ) : (
               <Link
                 href={crumb.href}
+                prefetch={false}
                 className="hover:text-primary transition-colors truncate max-w-[150px]"
                 title={crumb.label}
               >

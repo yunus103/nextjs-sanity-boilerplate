@@ -36,7 +36,7 @@ export function ServicesSection({
           <div className="space-y-12">
             <AnimateGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {services.slice(0, 3).map((service: Service) => (
-                <Link key={service.slug?.current} href={`/hizmetler/${service.slug?.current}`} className="group block">
+                <Link key={service.slug?.current} href={`/hizmetler/${service.slug?.current}`} prefetch={false} className="group block">
                   <article className="border rounded-xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
                     {service.mainImage && (
                       <div className="relative aspect-video overflow-hidden">
@@ -67,7 +67,7 @@ export function ServicesSection({
             </AnimateGroup>
             
             <FadeIn delay={0.2} className="text-center pt-4">
-              <Button variant="outline" size="lg" render={<Link href="/hizmetler" />}>
+              <Button variant="outline" size="lg" render={<Link href="/hizmetler" prefetch={false} />}>
                 Tüm Hizmetleri Gör
               </Button>
             </FadeIn>

@@ -5,14 +5,29 @@ import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const data = await getLayoutData();
+  const contact = data?.settings?.contactInfo;
 
   return (
     <>
-      <Header settings={data?.settings} navigation={data?.navigation} />
+      <Header
+        siteName={data?.settings?.siteName}
+        logo={data?.settings?.logo}
+        links={data?.navigation?.headerLinks}
+        contactInfo={
+          contact
+            ? {
+                phone: contact.phone,
+                email: contact.email,
+                whatsappNumber: contact.whatsappNumber,
+              }
+            : undefined
+        }
+        socialLinks={data?.settings?.socialLinks}
+      />
       <main>{children}</main>
       <Footer settings={data?.settings} navigation={data?.navigation} />
-      {data?.settings?.contactInfo?.whatsappNumber && (
-        <WhatsAppButton number={data.settings.contactInfo.whatsappNumber} />
+      {contact?.whatsappNumber && (
+        <WhatsAppButton number={contact.whatsappNumber} />
       )}
     </>
   );

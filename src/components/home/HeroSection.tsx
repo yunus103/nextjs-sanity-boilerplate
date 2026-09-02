@@ -61,7 +61,7 @@ export function HeroSection({ data }: HeroSectionProps) {
             </p>
           )}
           {data?.heroCtaLabel && data?.heroCtaLink && (
-            <Button size="lg" render={<Link href={resolveLink(data.heroCtaLink)} />}>
+            <Button size="lg" render={<Link href={resolveLink(data.heroCtaLink)} prefetch={false} />}>
               {data.heroCtaLabel}
             </Button>
           )}

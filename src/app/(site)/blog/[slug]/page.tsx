@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article className="container mx-auto px-4 py-16 max-w-3xl break-words overflow-x-hidden">
         <FadeIn direction="up">
-          <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/blog" />}>
+          <Button variant="ghost" className="mb-8 -ml-2" render={<Link href="/blog" prefetch={false} />}>
             {"← Blog'a Dön"}
           </Button>
 
@@ -84,6 +84,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.category && (
               <Link
                 href={post.category.slug?.current ? `/blog?category=${post.category.slug.current}` : "/blog"}
+                prefetch={false}
                 className="text-xs font-medium px-3 py-1 bg-primary/10 text-primary rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
               >
                 {post.category.title}
@@ -138,7 +139,7 @@ export default async function BlogPostPage({ params }: Props) {
               <h2 className="text-2xl font-bold mb-8 font-bankgothic">İlgili Yazılar</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {relatedPosts.map((rPost: BlogPost) => (
-                  <Link key={rPost.slug?.current} href={`/blog/${rPost.slug?.current}`} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
+                  <Link key={rPost.slug?.current} href={`/blog/${rPost.slug?.current}`} prefetch={false} className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl">
                     <article className="overflow-hidden h-full flex flex-col">
                       {rPost.mainImage && (
                         <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-muted">

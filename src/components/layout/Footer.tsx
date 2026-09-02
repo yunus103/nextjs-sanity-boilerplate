@@ -93,6 +93,7 @@ export function Footer({ settings, navigation }: { settings: SiteSettings; navig
                   <Link
                     key={i}
                     href={resolveHref(item)}
+                    prefetch={false}
                     target={item.openInNewTab ? "_blank" : undefined}
                     rel={item.openInNewTab ? "noopener noreferrer" : undefined}
                     className="block text-sm text-muted-foreground hover:text-primary transition-colors"

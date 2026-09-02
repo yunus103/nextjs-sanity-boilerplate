@@ -38,7 +38,7 @@ export default async function ProjectsHubPage() {
         {projects && projects.length > 0 ? (
           <AnimateGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project: Project) => (
-              <Link key={project.slug?.current} href={`/projeler/${project.slug?.current}`} className="group block">
+              <Link key={project.slug?.current} href={`/projeler/${project.slug?.current}`} prefetch={false} className="group block">
                 <article className="border rounded-xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
                   {project.mainImage && (
                     <div className="relative aspect-[4/3] overflow-hidden">
@@ -80,7 +80,7 @@ export default async function ProjectsHubPage() {
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
               Hayalinizdeki projeyi birlikte gerçeğe dönüştürelim. Uzman ekibimizle konuşmak için hemen iletişime geçin.
             </p>
-            <Button size="lg" render={<Link href={pageData.ctaLink} />}>
+            <Button size="lg" render={<Link href={pageData.ctaLink} prefetch={false} />}>
               {pageData.ctaLabel}
             </Button>
           </FadeIn>
