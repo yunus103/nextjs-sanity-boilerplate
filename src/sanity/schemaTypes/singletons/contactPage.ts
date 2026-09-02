@@ -25,6 +25,14 @@ export const contactPageType = defineType({
     // Content Group
     defineField({ name: "pageTitle", title: "Sayfa Başlığı", type: "string", group: "content", validation: (Rule) => Rule.required() }),
     defineField({ name: "pageSubtitle", title: "Giriş Metni", type: "text", rows: 3, group: "content" }),
+    defineField({
+      name: "showForm",
+      title: "İletişim Formunu Göster",
+      type: "boolean",
+      group: "content",
+      initialValue: false,
+      description: "Açılırsa sayfada e-posta formu gösterilir. Kapalıyken form gizlenir.",
+    }),
     defineField({ name: "formTitle", title: "Form Başlığı", type: "string", group: "content", initialValue: "Bize Ulaşın" }),
     defineField({
       name: "successMessage",

@@ -76,7 +76,9 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
 export const contactPageQuery = groq`*[_type == "contactPage"][0] {
   heroTitle, heroSubtitle,
   heroImage ${imageFields},
-  pageTitle, pageSubtitle, formTitle, successMessage, seo
+  pageTitle, pageSubtitle, showForm, formTitle, successMessage,
+  "contactInfo": *[_type == "siteSettings"][0].contactInfo,
+  seo
 }`;
 
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {

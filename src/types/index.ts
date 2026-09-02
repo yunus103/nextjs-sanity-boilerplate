@@ -149,8 +149,10 @@ export interface AboutPage extends BasePage {
 export interface ContactPage extends BasePage {
   pageTitle: string;
   pageSubtitle?: string;
+  showForm?: boolean;
   formTitle?: string;
   successMessage?: string;
+  contactInfo?: SiteSettings["contactInfo"];
 }
 
 export interface InnerPageWithCta extends BasePage {
