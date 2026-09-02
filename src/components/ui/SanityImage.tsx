@@ -6,6 +6,7 @@ import { SanityImage as SanityImageType } from "@/types";
 
 type SanityImageProps = {
   image: SanityImageType;
+  alt?: string;
   width?: number;
   height?: number;
   fill?: boolean;
@@ -38,6 +39,7 @@ type SanityImageProps = {
 
 export function SanityImage({
   image,
+  alt,
   width = 800,
   height = 600,
   fill = false,
@@ -97,7 +99,7 @@ export function SanityImage({
     <Image
       loader={sanityLoader}
       src={image.asset._ref ?? image.asset._id ?? "sanity-image"}
-      alt={image.alt ?? ""}
+      alt={image.alt || alt || ""}
       width={fill ? undefined : width}
       height={fill ? undefined : height}
       fill={fill}

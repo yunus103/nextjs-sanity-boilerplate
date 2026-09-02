@@ -22,7 +22,7 @@ export const serviceType = defineType({
       title: "Ana Görsel",
       type: "image",
       options: { hotspot: true },
-      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string", validation: (Rule) => Rule.required() })],
+      fields: [defineField({ name: "alt", title: "Alt Metni", type: "string" })],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -35,7 +35,7 @@ export const serviceType = defineType({
           type: "image",
           options: { hotspot: true },
           fields: [
-            defineField({ name: "alt", title: "Alt Metni", type: "string", validation: (Rule) => Rule.required() }),
+            defineField({ name: "alt", title: "Alt Metni", type: "string" }),
             defineField({
               name: "alignment",
               title: "Hizalama",

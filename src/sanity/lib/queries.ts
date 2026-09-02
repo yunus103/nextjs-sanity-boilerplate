@@ -1,18 +1,31 @@
 import { groq } from "next-sanity";
 
+// ─── Shared Fragments ──────────────────────────────────────────────────────────
+
+/**
+ * Shared GROQ projection for SanityImage fields.
+ * Includes LQIP blur preview, dimensions, alt text, hotspot, and crop.
+ */
+export const imageFields = /* groq */ `{
+  asset->{ _id, url, metadata { lqip, dimensions } },
+  alt,
+  hotspot,
+  crop
+}`;
+
 // ─── Layout ────────────────────────────────────────────────────────────────────
 // Her sayfada bir kez çekilir — header, footer, global ayarlar
 export const layoutQuery = groq`{
   "settings": *[_type == "siteSettings"][0] {
     siteName, siteTagline,
-    logo { asset->{ _id, url, metadata { lqip, dimensions } }, hotspot, crop },
+    logo ${imageFields},
     logoHeight,
     favicon { asset->{ _id, url } },
     contactInfo { phone, email, address, whatsappNumber, mapIframe },
     socialLinks[] { platform, url },
     gaId, gtmId, googleSearchConsoleId,
     defaultSeo { metaTitle, metaDescription },
-    defaultOgImage { asset->{ _id, url, metadata { lqip, dimensions } } }
+    defaultOgImage ${imageFields}
   },
   "navigation": *[_type == "navigation"][0] {
     headerLinks[] { label, href, openInNewTab, subLinks[] { label, href, openInNewTab } },
@@ -29,58 +42,58 @@ export const homePageQuery = groq`*[_type == "homePage"][0] {
     manual,
     internal->{ _type, "slug": slug.current }
   },
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   aboutTitle, aboutSubtitle, aboutText,
-  aboutImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  aboutImage ${imageFields},
   aboutCtaLabel, aboutCtaLink,
   servicesTitle, servicesSubtitle,
   featuredServices[]-> {
     title, slug,
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+    mainImage ${imageFields}
   },
   projectsTitle, projectsSubtitle,
   featuredProjects[]-> {
     title, slug,
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+    mainImage ${imageFields}
   },
   blogTitle, blogSubtitle,
   featuredPosts[]-> {
     title, slug, excerpt, publishedAt,
     category->{ title, slug },
-    mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt }
+    mainImage ${imageFields}
   },
   seo
 }`;
 
 export const aboutPageQuery = groq`*[_type == "aboutPage"][0] {
   heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   pageTitle, pageSubtitle, body,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  mainImage ${imageFields},
   seo
 }`;
 
 export const contactPageQuery = groq`*[_type == "contactPage"][0] {
   heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   pageTitle, pageSubtitle, formTitle, successMessage, seo
 }`;
 
 export const blogPageQuery = groq`*[_type == "blogPage"][0] {
   heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
 export const servicesPageQuery = groq`*[_type == "servicesPage"][0] {
   heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
 export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
   heroTitle, heroSubtitle,
-  heroImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  heroImage ${imageFields},
   pageTitle, pageSubtitle, ctaLabel, ctaLink, seo
 }`;
 
@@ -88,17 +101,17 @@ export const projectsPageQuery = groq`*[_type == "projectsPage"][0] {
 
 export const blogListQuery = groq`*[_type == "blogPost"] | order(publishedAt desc) {
   title, slug, excerpt, publishedAt, category->{title, slug},
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const blogFallbackQuery = groq`*[_type == "blogPost"] | order(publishedAt desc)[0...3] {
   title, slug, excerpt, publishedAt, category->{title, slug},
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const blogPostBySlugQuery = groq`*[_type == "blogPost" && slug.current == $slug][0] {
   _id, _updatedAt, title, slug, publishedAt, excerpt, category->{_id, title, slug}, seoTags,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  mainImage ${imageFields},
   body[] {
     ...,
     _type == "image" => {
@@ -115,29 +128,29 @@ export const blogCategoriesQuery = groq`*[_type == "blogCategory"] | order(title
 
 export const blogListByCategorySlugQuery = groq`*[_type == "blogPost" && category->slug.current == $slug] | order(publishedAt desc) {
   title, slug, excerpt, publishedAt, category->{title, slug},
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const blogRelatedPostsQuery = groq`*[_type == "blogPost" && category._ref == $categoryId && _id != $currentPostId] | order(publishedAt desc)[0...3] {
   title, slug, excerpt, publishedAt, category->{title, slug},
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 // ─── Hizmetler ─────────────────────────────────────────────────────────────────
 
 export const serviceListQuery = groq`*[_type == "service"] | order(_createdAt asc) {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const serviceFallbackQuery = groq`*[_type == "service"] | order(_createdAt asc)[0...3] {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $slug][0] {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  mainImage ${imageFields},
   body[] {
     ...,
     _type == "image" => { asset->{ _id, url, metadata { lqip, dimensions } }, alt, alignment, size, hotspot, crop }
@@ -149,17 +162,17 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
 
 export const projectListQuery = groq`*[_type == "project"] | order(_createdAt asc) {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const projectFallbackQuery = groq`*[_type == "project"] | order(_createdAt asc)[0...3] {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop }
+  mainImage ${imageFields}
 }`;
 
 export const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
   title, slug,
-  mainImage { asset->{ _id, url, metadata { lqip, dimensions } }, alt, hotspot, crop },
+  mainImage ${imageFields},
   body[] {
     ...,
     _type == "image" => { asset->{ _id, url, metadata { lqip, dimensions } }, alt, alignment, size, hotspot, crop }
@@ -198,4 +211,3 @@ export const defaultSeoQuery = groq`*[_type == "siteSettings"][0] {
 export const blogSlugsQuery = groq`*[_type == "blogPost" && defined(slug.current)] { "slug": slug.current }`;
 export const projectSlugsQuery = groq`*[_type == "project" && defined(slug.current)] { "slug": slug.current }`;
 export const serviceSlugsQuery = groq`*[_type == "service" && defined(slug.current)] { "slug": slug.current }`;
-
