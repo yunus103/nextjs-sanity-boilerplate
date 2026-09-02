@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { cache } from "react";
-import { client } from "@/sanity/lib/client";
+import { cachedFetch } from "@/sanity/lib/client";
 import { layoutQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
@@ -31,7 +31,7 @@ export interface LayoutData {
 
 export const getLayoutData = cache(
   (): Promise<LayoutData> =>
-    client.fetch<LayoutData>(layoutQuery, {}, { next: { tags: ["layout"] } })
+    cachedFetch<LayoutData>(layoutQuery, {}, { next: { tags: ["layout"] } })
 );
 
 export async function buildMetadata(params: BuildMetadataParams = {}): Promise<Metadata> {
