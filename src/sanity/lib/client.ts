@@ -1,12 +1,7 @@
 import type { QueryParams, ResponseQueryOptions } from "@sanity/client";
 import { createClient } from "next-sanity";
 import { cache } from "react";
-
-const config = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: "2024-01-01",
-};
+import { config } from "./config";
 
 export const client = createClient({ ...config, useCdn: false });
 

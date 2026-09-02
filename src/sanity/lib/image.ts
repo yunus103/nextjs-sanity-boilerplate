@@ -1,8 +1,9 @@
 import { createImageUrlBuilder } from "@sanity/image-url";
-import { client } from "./client";
+import { config } from "./config";
 import { SanityImage } from "@/types";
 
-const builder = createImageUrlBuilder(client);
+// Built from plain project coordinates, not the Sanity client — see config.ts.
+const builder = createImageUrlBuilder(config);
 
 export function urlForImage(source?: SanityImage) {
   if (!source?.asset) return null;
