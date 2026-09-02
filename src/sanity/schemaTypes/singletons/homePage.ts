@@ -84,7 +84,7 @@ export const homePageType = defineType({
 
     // Services Preview Group
     defineField({ name: "servicesTitle", title: "Hizmetler Bölüm Başlığı", type: "string", group: "services", initialValue: "Hizmetlerimiz" }),
-    defineField({ name: "servicesSubtitle", title: "Hizmetler Bölüm Alt Başlığı", type: "text", rows: 2, group: "services" }),
+    defineField({ name: "servicesSubtitle", title: "Hizmetler Bölüm Alt Başlığı", type: "text", rows: 2, group: "services", initialValue: "Size en uygun profesyonel çözümlerimiz." }),
     defineField({
       name: "featuredServices",
       title: "Öne Çıkan Hizmetler",
@@ -96,7 +96,7 @@ export const homePageType = defineType({
 
     // Projects Preview Group
     defineField({ name: "projectsTitle", title: "Projeler Bölüm Başlığı", type: "string", group: "projects", initialValue: "Projelerimiz" }),
-    defineField({ name: "projectsSubtitle", title: "Projeler Bölüm Alt Başlığı", type: "text", rows: 2, group: "projects" }),
+    defineField({ name: "projectsSubtitle", title: "Projeler Bölüm Alt Başlığı", type: "text", rows: 2, group: "projects", initialValue: "Başarıyla tamamladığımız güncel projeler." }),
     defineField({
       name: "featuredProjects",
       title: "Öne Çıkan Projeler",
@@ -108,7 +108,7 @@ export const homePageType = defineType({
 
     // Blog Preview Group
     defineField({ name: "blogTitle", title: "Blog Bölüm Başlığı", type: "string", group: "blog", initialValue: "Son Haberler & Blog" }),
-    defineField({ name: "blogSubtitle", title: "Blog Bölüm Alt Başlığı", type: "text", rows: 2, group: "blog" }),
+    defineField({ name: "blogSubtitle", title: "Blog Bölüm Alt Başlığı", type: "text", rows: 2, group: "blog", initialValue: "Sektördeki gelişmeler ve ekibimizden güncel paylaşımlar." }),
     defineField({
       name: "featuredPosts",
       title: "Öne Çıkan Blog Yazıları",

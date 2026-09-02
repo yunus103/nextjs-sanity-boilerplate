@@ -1,4 +1,5 @@
 import { FadeIn } from "@/components/ui/FadeIn";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { AnimateGroup } from "@/components/ui/AnimateGroup";
 import { Button } from "@/components/ui/button";
@@ -24,16 +25,11 @@ export function ProjectsSection({
       <div className="container mx-auto px-4">
         
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
-          <FadeIn direction="up">
-            <span className="text-sm font-semibold tracking-wider text-primary uppercase">
-              {displayTitle}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 text-foreground">
-              {displaySubtitle}
-            </h2>
-          </FadeIn>
-        </div>
+        <SectionHeading
+          title={displayTitle}
+          subtitle={displaySubtitle}
+          className="mb-16"
+        />
 
         {/* Content */}
         {projects && projects.length > 0 ? (

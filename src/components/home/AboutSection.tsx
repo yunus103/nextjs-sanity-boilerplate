@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SanityImage } from "@/components/ui/SanityImage";
 import { RichText } from "@/components/ui/RichText";
@@ -35,16 +36,11 @@ export function AboutSection({
           
           {/* Sol Kolon: Metinler */}
           <div className="lg:col-span-7 space-y-6">
-            <FadeIn direction="up">
-              <span className="text-sm font-semibold tracking-wider text-primary uppercase">
-                {displayTitle}
-              </span>
-              {subtitle && (
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 text-foreground">
-                  {subtitle}
-                </h2>
-              )}
-            </FadeIn>
+            <SectionHeading
+              title={displayTitle}
+              subtitle={subtitle}
+              align="left"
+            />
 
             {text && text.length > 0 && (
               <FadeIn delay={0.15}>
