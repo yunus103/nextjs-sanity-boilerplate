@@ -4,15 +4,7 @@ import { client } from "@/sanity/lib/client";
 import { layoutQuery } from "@/sanity/lib/queries";
 import { urlForImage } from "@/sanity/lib/image";
 import { getSiteUrl } from "./utils";
-import { SanityImage, SiteSettings, Navigation } from "@/types";
-
-type PageSeo = {
-  metaTitle?: string;
-  metaDescription?: string;
-  ogImage?: SanityImage;
-  canonicalUrl?: string;
-  noIndex?: boolean;
-};
+import { SanityImage, SiteSettings, Navigation, SeoSettings } from "@/types";
 
 type BuildMetadataParams = {
   title?: string;
@@ -20,28 +12,14 @@ type BuildMetadataParams = {
   ogImage?: SanityImage;
   canonicalPath?: string;
   noIndex?: boolean;
-  pageSeo?: PageSeo;
+  pageSeo?: SeoSettings;
 };
 
-type PortableTextChild = {
-  text?: string;
-};
-
-type PortableTextBlock = {
-  _type?: string;
-  children?: PortableTextChild[];
-};
+import { toPlainText, type PortableTextBlock } from "@portabletext/react";
 
 export function portableTextToPlainText(value?: PortableTextBlock[], maxLength = 160): string | undefined {
   if (!value?.length) return undefined;
-
-  const text = value
-    .filter((block) => block?._type === "block")
-    .flatMap((block) => block.children?.map((child) => child.text).filter(Boolean) || [])
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim();
-
+  const text = toPlainText(value).replace(/\s+/g, " ").trim();
   if (!text) return undefined;
   return text.length > maxLength ? `${text.slice(0, maxLength - 3).trimEnd()}...` : text;
 }

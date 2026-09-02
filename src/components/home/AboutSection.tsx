@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { SanityImage } from "@/components/ui/SanityImage";
@@ -6,11 +5,12 @@ import { RichText } from "@/components/ui/RichText";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SanityImage as SanityImageType } from "@/types";
+import type { PortableTextBlock } from "@portabletext/react";
 
 interface AboutSectionProps {
   title?: string;
   subtitle?: string;
-  text?: any[];
+  text?: PortableTextBlock[];
   image?: SanityImageType;
   ctaLabel?: string;
   ctaLink?: string;

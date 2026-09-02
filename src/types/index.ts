@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { PortableTextBlock } from "@portabletext/react";
+
 /**
  * Global TypeScript interfaces for Sanity documents and models.
  * Ensures strict typing, autocomplete, and zero warnings in IDE.
@@ -44,7 +45,7 @@ export interface BlogPost {
   publishedAt?: string;
   category?: BlogCategory;
   mainImage?: SanityImage;
-  body?: any[];
+  body?: PortableTextBlock[];
   seoTags?: string[];
   seo?: SeoSettings;
 }
@@ -99,7 +100,7 @@ export interface Service {
   title: string;
   slug: SanitySlug;
   mainImage?: SanityImage;
-  body?: any[];
+  body?: PortableTextBlock[];
   seo?: SeoSettings;
 }
 
@@ -110,7 +111,7 @@ export interface Project {
   title: string;
   slug: SanitySlug;
   mainImage?: SanityImage;
-  body?: any[];
+  body?: PortableTextBlock[];
   seo?: SeoSettings;
 }
 
@@ -126,10 +127,9 @@ export interface CtaLink {
 export interface SeoSettings {
   metaTitle?: string;
   metaDescription?: string;
-  metaKeywords?: string[];
-  shareTitle?: string;
-  shareDescription?: string;
-  shareGraphic?: SanityImage;
+  ogImage?: SanityImage;
+  canonicalUrl?: string;
+  noIndex?: boolean;
 }
 
 export interface BasePage {
@@ -142,7 +142,7 @@ export interface BasePage {
 export interface AboutPage extends BasePage {
   pageTitle: string;
   pageSubtitle?: string;
-  body?: any[];
+  body?: PortableTextBlock[];
   mainImage?: SanityImage;
 }
 
@@ -172,7 +172,7 @@ export interface HomePage {
   heroCtaLink?: CtaLink;
   aboutTitle?: string;
   aboutSubtitle?: string;
-  aboutText?: any[];
+  aboutText?: PortableTextBlock[];
   aboutImage?: SanityImage;
   aboutCtaLabel?: string;
   aboutCtaLink?: string;

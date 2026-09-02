@@ -1,4 +1,4 @@
-import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { PortableText, PortableTextComponents, type PortableTextBlock } from "@portabletext/react";
 import Link from "next/link";
 import { SanityImage } from "@/components/ui/SanityImage";
 
@@ -84,8 +84,7 @@ const components: PortableTextComponents = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function RichText({ value, className = "" }: { value?: any[]; className?: string }) {
+export function RichText({ value, className = "" }: { value?: PortableTextBlock[]; className?: string }) {
   if (!value) return null;
   return (
     <div className={`prose prose-lg max-w-none break-words flow-root ${className}`}>
